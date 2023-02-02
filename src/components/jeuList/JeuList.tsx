@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Jeu from '../../interfaces/jeu';
-
 import axios from "axios"
 import styled from 'styled-components';
 import JeuItem from '../jeuItem/JeuItem';
+import JeuForm from '../jeuForm/JeuForm';
 
 const StyledJeuList = styled.div`
 
@@ -27,7 +27,6 @@ const JeuList = () => {
     useEffect(() => {
         axios.get("http://localhost:5000/" + "jeux").then((resp) => {
             setJeuList(resp.data)
-            console.log(resp.data)
             setIsMount(true)
         })
     }, [])
@@ -58,6 +57,8 @@ const JeuList = () => {
         <>
             {isMount &&
                 <StyledJeuList>
+                    <h3>Jeux</h3>
+                    <JeuForm></JeuForm>
                     {displayList()}
                 </StyledJeuList>
             }

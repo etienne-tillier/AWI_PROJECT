@@ -29,7 +29,7 @@ const BenevoleList = () => {
     const [optionsSelectZones, setOptionsSelectZone] = useState([])
 
     useEffect(() => {
-        //Fetch benevols from the api
+        //Fetch benevoles from the api
         axios.get("http://localhost:5000/" + "benevoles").then((resp) => {
             setBenevoles(resp.data)
             axios.get("http://localhost:5000/" + "zones").then((resp) => {
@@ -66,8 +66,12 @@ const BenevoleList = () => {
         <>
             {isMount &&
                 <StyledBenevoleList>
+                    <h3>Bénévoles</h3>
+                    <BenevoleForm/>
+                    <div className="select">
+
+                    </div>
                     {displayList()}
-                    <BenevoleForm></BenevoleForm>
                 </StyledBenevoleList>
             }
         </>
