@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-
 import styled from 'styled-components';
 import BenevoleList from '../../components/benevoleList/BenevoleList';
 import JeuList from '../../components/jeuList/JeuList';
+
 
 
 interface StyledHomeProps {

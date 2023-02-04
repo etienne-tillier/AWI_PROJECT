@@ -6,6 +6,7 @@ import typeJeu from '../../interfaces/typeJeu';
 import { ValueType, ActionMeta} from "react-select/lib/types";
 import Jeu from '../../interfaces/jeu';
 
+
 const StyledJeuForm = styled.div`
 
 
@@ -32,7 +33,7 @@ const JeuForm : React.FC<Props> = ({onAddToArray}) => {
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        axios.get("http://localhost:5000/" + "typeJeux").then((resp) => {
+        axios.get(process.env.REACT_APP_API_URL + "typeJeux").then((resp) => {
             setTypesJeu(resp.data)
             let options : Option[] = []
             for (let type of resp.data){
@@ -50,7 +51,7 @@ const JeuForm : React.FC<Props> = ({onAddToArray}) => {
         e.preventDefault()
         if (inputRef && inputRef.current) {
             const nameValue : String = inputRef.current.value;
-            axios.post("http://localhost:5000/" + "jeux", {
+            axios.post(process.env.REACT_APP_API_URL + "jeux", {
                 nom: nameValue,
                 type: {
                     _jd : typeChoisi?.value,

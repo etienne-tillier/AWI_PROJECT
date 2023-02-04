@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import JeuItem from '../jeuItem/JeuItem';
 import JeuForm from '../jeuForm/JeuForm';
 
+
 const StyledJeuList = styled.div`
 
     width: 100%;
@@ -25,7 +26,7 @@ const JeuList = () => {
     const [jeuList, setJeuList] = useState<Jeu[]>([])
 
     useEffect(() => {
-        axios.get("http://localhost:5000/" + "jeux").then((resp) => {
+        axios.get(process.env.REACT_APP_API_URL + "jeux").then((resp) => {
             setJeuList(resp.data)
             setIsMount(true)
         })
@@ -46,6 +47,7 @@ const JeuList = () => {
                 {
                     jeuList.map((jeu : Jeu) => (
                         <JeuItem 
+                            _id={jeu._id}
                             nom={jeu.nom}
                             type={jeu.type}
                             />
@@ -61,7 +63,6 @@ const JeuList = () => {
         <>
             {isMount &&
                 <StyledJeuList>
-                    <h3>Jeux</h3>
                     <JeuForm onAddToArray={handleAddToArray}></JeuForm>
                     {displayList()}
                 </StyledJeuList>

@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import BenevoleForm from '../benevoleForm/BenevoleForm';
 
+
 const StyledBenevoleList = styled.div`
 
     width: 100%;
@@ -29,9 +30,9 @@ const BenevoleList = () => {
 
     useEffect(() => {
         //Fetch benevoles from the api
-        axios.get("http://localhost:5000/" + "benevoles").then((resp) => {
+        axios.get(process.env.REACT_APP_API_URL + "benevoles").then((resp) => {
             setBenevoles(resp.data)
-            axios.get("http://localhost:5000/" + "zones").then((resp) => {
+            axios.get(process.env.REACT_APP_API_URL + "zones").then((resp) => {
                 setZones(resp.data)
                 setIsMount(true)
             })
@@ -51,10 +52,15 @@ const BenevoleList = () => {
                     <div>Nom</div>
                     <div>Prénom</div>
                     <div>Email</div>
+                    <div>Zone</div>
+                    <div>Créneau</div>
+                    <div>Ajouter une zone</div>
+                    <div>Modifier</div>
                 </div>
                 {
                     benevoles.map((benevole : Benevole) => (
-                            <BenevoleItem 
+                            <BenevoleItem
+                                _id={benevole._id}
                                 nom={benevole.nom} 
                                 prenom={benevole.prenom} 
                                 email={benevole.email}
@@ -70,7 +76,6 @@ const BenevoleList = () => {
         <>
             {isMount &&
                 <StyledBenevoleList>
-                    <h3>Bénévoles</h3>
                     <BenevoleForm onAddToArray={handleAddToArray}/>
                     <div className="select">
 

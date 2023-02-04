@@ -22,7 +22,7 @@ const BenevoleForm : React.FC<Props> = ({onAddToArray}) => {
 
     const onSubmit = (e : any) => {
         e.preventDefault()
-        axios.post("http://localhost:5000/" + "benevoles", {
+        axios.post(process.env.REACT_APP_API_URL + "benevoles", {
             nom: document.getElementsByTagName("input")[0].value,
             prenom: document.getElementsByTagName("input")[1].value,
             email: document.getElementsByTagName("input")[2].value
