@@ -1,5 +1,5 @@
 export default interface Benevole {
-    _id: Number;
+    _id: String;
     prenom: String;
     nom: String;
     email: String;

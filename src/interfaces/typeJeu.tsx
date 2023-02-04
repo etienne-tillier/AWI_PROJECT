@@ -1,4 +1,4 @@
 export default interface typeJeu {
-    _id: Number;
+    _id: String;
     nom: String;
 }
