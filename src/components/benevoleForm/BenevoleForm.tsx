@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import styled from 'styled-components';
 import axios from "axios"
+import Benevole from '../../interfaces/benevole';
 
 
 const StyledBenevoleForm = styled.div`
@@ -10,9 +11,11 @@ const StyledBenevoleForm = styled.div`
 
 `
 
+interface Props {
+    onAddToArray: (newArrayValue: Benevole) => void;
+  }
 
-
-const BenevoleForm = () => {
+const BenevoleForm : React.FC<Props> = ({onAddToArray}) => {
 
     const [confirmationText, setConfirmationText] = useState("")
 
@@ -25,6 +28,7 @@ const BenevoleForm = () => {
             email: document.getElementsByTagName("input")[2].value
           }).then((resp) => {
             if (resp.status == 200) {
+                onAddToArray(resp.data)
                 setConfirmationText("La création du bénévole à bien été faite !")
             }
             else {

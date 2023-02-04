@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import BenevoleItem from '../benevoleItem/BenevoleItem';
 import Benevole from '../../interfaces/benevole';
 import styled from 'styled-components';
-import reactSelect from 'react-select';
 import axios from 'axios';
 import BenevoleForm from '../benevoleForm/BenevoleForm';
 
@@ -24,7 +23,7 @@ const StyledBenevoleList = styled.div`
 const BenevoleList = () => {
 
     const [zones, setZones] = useState(null)
-    const [benevoles, setBenevoles] = useState([])
+    const [benevoles, setBenevoles] = useState<Benevole[]>([])
     const [isMount, setIsMount] = useState(false)
     const [optionsSelectZones, setOptionsSelectZone] = useState([])
 
@@ -38,6 +37,11 @@ const BenevoleList = () => {
             })
         })
       }, [])
+
+    const handleAddToArray = (newBenevole: Benevole) => {
+        setBenevoles([...benevoles, newBenevole]);
+    };
+
 
     
     const displayList = () => {
@@ -67,7 +71,7 @@ const BenevoleList = () => {
             {isMount &&
                 <StyledBenevoleList>
                     <h3>Bénévoles</h3>
-                    <BenevoleForm/>
+                    <BenevoleForm onAddToArray={handleAddToArray}/>
                     <div className="select">
 
                     </div>

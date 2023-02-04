@@ -22,7 +22,7 @@ const JeuList = () => {
 
 
     const [isMount, setIsMount] = useState(false)
-    const [jeuList, setJeuList] = useState([])
+    const [jeuList, setJeuList] = useState<Jeu[]>([])
 
     useEffect(() => {
         axios.get("http://localhost:5000/" + "jeux").then((resp) => {
@@ -30,6 +30,10 @@ const JeuList = () => {
             setIsMount(true)
         })
     }, [])
+
+    const handleAddToArray = (newJeu: Jeu) => {
+        setJeuList([...jeuList, newJeu]);
+    };
 
     const displayList = () => {
 
@@ -58,7 +62,7 @@ const JeuList = () => {
             {isMount &&
                 <StyledJeuList>
                     <h3>Jeux</h3>
-                    <JeuForm></JeuForm>
+                    <JeuForm onAddToArray={handleAddToArray}></JeuForm>
                     {displayList()}
                 </StyledJeuList>
             }

@@ -9,7 +9,6 @@ const StyledBenevoleItem = styled.div`
         flex-direction: row;
         justify-content: space-evenly;
         width: 100%;
-
 `
 
 
