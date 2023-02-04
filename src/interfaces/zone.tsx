@@ -1,10 +1,10 @@
 import Jeu from "./jeu";
-import Benevole from "./benevole";
+import BenevoleZone from "./benevoleZone";
 
-export default interface zone{
-    _id: Number;
+export default interface Zone{
+    _id: String;
     nom: String;
     jeux: Jeu[]
-    benevoles: Benevole[]
+    benevoles: BenevoleZone[]
     
 }

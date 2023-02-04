@@ -1,7 +1,7 @@
 import typeJeu from "./typeJeu";
 
 export default interface Jeu {
-    _id: Number;
+    _id: String;
     nom: String;
     type: typeJeu;
 }

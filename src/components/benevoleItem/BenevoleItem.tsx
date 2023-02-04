@@ -11,13 +11,41 @@ const StyledBenevoleItem = styled.div`
         width: 100%;
 `
 
+interface Props {
+    benevole : Benevole;
+    nomZone : String | undefined;
+    heureDebut : Date | undefined;
+    heureFin : Date | undefined;
+}
 
-const BenevoleItem = (props : Benevole) => {
+const formatDate = (date : Date) => {
+    return date.toLocaleTimeString(navigator.language, {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+}
+
+
+const BenevoleItem : React.FC<Props> = ({benevole, nomZone, heureDebut, heureFin }) => {
     return (
         <StyledBenevoleItem>
-                <div>{props.nom}</div>
-                <div>{props.prenom}</div>
-                <div>{props.email}</div>
+                <div>{benevole.nom}</div>
+                <div>{benevole.prenom}</div>
+                <div>{benevole.email}</div>
+                <div>{nomZone}</div>
+                {
+                    heureDebut ? 
+                    <div>{heureDebut.toLocaleDateString("fr-FR", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric"
+                      }) + formatDate(heureDebut) + " - " + formatDate(heureFin!)}</div>
+                    :
+                    <div>{" - "}</div>
+                }
+
+                <div>+</div>
+                <div>modif</div>
         </StyledBenevoleItem>
     );
 };

@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import axios from "axios"
 import Select, {SingleValue} from 'react-select'
 import typeJeu from '../../interfaces/typeJeu';
-import { ValueType, ActionMeta} from "react-select/lib/types";
 import Jeu from '../../interfaces/jeu';
 
 
@@ -15,13 +14,13 @@ const StyledJeuForm = styled.div`
 
 
 interface Option {
-    value: string;
-    label: string;
+    value: String;
+    label: String;
   }
 
-  interface Props {
+interface Props {
     onAddToArray: (newArrayValue: Jeu) => void;
-  }
+}
 
 const JeuForm : React.FC<Props> = ({onAddToArray}) => {
 
@@ -71,7 +70,7 @@ const JeuForm : React.FC<Props> = ({onAddToArray}) => {
 
     }
 
-    const handleChange = (newValue: SingleValue<{}>, actionMeta: ActionMeta) => {
+    const handleChange = (newValue: SingleValue<{}>) => {
         setTypeChoisi(newValue as Option | null);
     };
 
