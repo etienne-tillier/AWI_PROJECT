@@ -16,6 +16,7 @@ interface Props {
     nomZone : String | undefined;
     heureDebut : Date | undefined;
     heureFin : Date | undefined;
+    setBenevoleToModif : (benevole : Benevole | undefined) => void;
 }
 
 const formatDate = (date : Date) => {
@@ -26,7 +27,7 @@ const formatDate = (date : Date) => {
 }
 
 
-const BenevoleItem : React.FC<Props> = ({benevole, nomZone, heureDebut, heureFin }) => {
+const BenevoleItem : React.FC<Props> = ({benevole, nomZone, heureDebut, heureFin, setBenevoleToModif}) => {
     return (
         <StyledBenevoleItem>
                 <div>{benevole.nom}</div>
@@ -45,7 +46,7 @@ const BenevoleItem : React.FC<Props> = ({benevole, nomZone, heureDebut, heureFin
                 }
 
                 <div>+</div>
-                <div>modif</div>
+                <div onClick={() => {setBenevoleToModif(benevole)}}>modif</div>
         </StyledBenevoleItem>
     );
 };

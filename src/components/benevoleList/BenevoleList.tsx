@@ -36,6 +36,7 @@ const BenevoleList = () => {
     const [isMount, setIsMount] = useState(false)
     const [selectedZone, setSelectedZone] = useState<Option>({value: null, label:"Tous les Bénévoles"})
     const [optionsSelectZones, setOptionsSelectZone] = useState<Option[]>([])
+    const [benevoleToModif, setBenevoleToModif] = useState<Benevole | undefined>(undefined)
 
     useEffect(() => {
         //Fetch benevoles from the api
@@ -62,9 +63,26 @@ const BenevoleList = () => {
         })
       }, [])
 
+    const updateBenevole = (benevoles: Benevole[], updatedBenevole: Benevole) => {
+        const newBenevoles = [...benevoles];
+        const index = newBenevoles.findIndex(benevole => benevole._id === updatedBenevole._id);
+        if (index !== -1) {
+            newBenevoles[index] = updatedBenevole;
+        }
+        return newBenevoles;
+    };
+
     const handleAddToArray = (newBenevole: Benevole) => {
         setBenevoles([...benevoles, newBenevole]);
     };
+
+    const handleDelToArray = (benevoleToRemove : Benevole) => {
+        setBenevoles(benevoles.filter(benevole => benevole._id !== benevoleToRemove._id));
+    }
+
+    const handleUpdateBenevole = (updatedBenevole: Benevole) => {
+        setBenevoles(prevBenevoles => updateBenevole(prevBenevoles, updatedBenevole));
+      };
 
     const handleChange = (newValue: SingleValue<{}>) => {
         setSelectedZone(newValue as Option);
@@ -81,7 +99,7 @@ const BenevoleList = () => {
                     <div>Email</div>
                     <div>Zone</div>
                     <div>Créneau</div>
-                    <div>Ajouter une zone</div>
+                    <div>Ajouter un créneau</div>
                     <div>Modifier</div>
                 </div>
                 {
@@ -92,6 +110,7 @@ const BenevoleList = () => {
                             nomZone={zone.label}
                             heureDebut={new Date(benevole.heureDebut)}
                             heureFin={new Date(benevole.heureFin)}
+                            setBenevoleToModif={setBenevoleToModif}
                         />
                     ))
                     :
@@ -101,6 +120,7 @@ const BenevoleList = () => {
                                 nomZone={undefined}
                                 heureDebut={undefined}
                                 heureFin={undefined}
+                                setBenevoleToModif={setBenevoleToModif}
                             />
                     ))
                 }
@@ -114,7 +134,8 @@ const BenevoleList = () => {
             {isMount &&
                 <StyledBenevoleList>
                     <>
-                        <BenevoleForm onAddToArray={handleAddToArray}/>
+                        <BenevoleForm onAddToArray={handleAddToArray} benevole={benevoleToModif}
+                            setBenevoleToModif={setBenevoleToModif} onUpdateToArray={handleUpdateBenevole}/>
                         <div className="select">
                             <Select
                                 onChange={handleChange}
