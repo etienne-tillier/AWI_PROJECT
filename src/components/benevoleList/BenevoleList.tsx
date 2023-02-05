@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import BenevoleItem from '../benevoleItem/BenevoleItem';
 import Benevole from '../../interfaces/benevole';
+import Creneau from "../../interfaces/creneau";
 import styled from 'styled-components';
 import axios from 'axios';
 import BenevoleForm from '../benevoleForm/BenevoleForm';
@@ -35,12 +36,19 @@ const StyledBenevoleList = styled.div`
         background-color: #3655b3;
         color: white;
     }
+  
+    .removeCreneauButton{
+      text-decoration: underline;
+    }
+    .removeCreneauButton{
+      cursor: pointer;
+    }
 
 `
 
 interface Option {
-    value : Zone | null;
-    label : String;
+    value: Zone | null;
+    label: String;
 }
 
 
@@ -54,6 +62,7 @@ const BenevoleList = () => {
     const [optionsSelectZones, setOptionsSelectZone] = useState<Option[]>([])
     const [benevoleToModif, setBenevoleToModif] = useState<Benevole | undefined>(undefined)
     const [benevoleToLink, setBenevoleToLink] = useState<Benevole | undefined>(undefined)
+    const [creneauToRemove, setCreneauToRemove] = useState<Creneau|undefined>(undefined)
 
     useEffect(() => {
         //Fetch benevoles from the api
@@ -106,6 +115,16 @@ const BenevoleList = () => {
         console.log(selectedZone)
     };
 
+    const removeCreneau = ()=>{
+        axios.patch(process.env.REACT_APP_API_URL + "zones/removeBenevFrom/"+creneauToRemove!.zone._id,{
+            id: creneauToRemove!.benevole._id,
+            heureDebut: creneauToRemove!.debut
+        }).then(()=>{
+            setCreneauToRemove(undefined);
+            //TODO refresh list ?
+        })
+    }
+
     
     const displayList = (zone : Option) => {
         return (
@@ -129,22 +148,26 @@ const BenevoleList = () => {
                     zone.value.benevoles.map((benevole : BenevoleZone) => (
                         <BenevoleItem
                             benevole={benevole.benevole}
-                            nomZone={zone.label}
+                            zone={zone.value!}
                             heureDebut={new Date(benevole.heureDebut)}
                             heureFin={new Date(benevole.heureFin)}
                             setBenevoleToModif={setBenevoleToModif}
                             setBenevoleToLink={setBenevoleToLink}
+                            setCreneauToRemove={setCreneauToRemove}
+                            creneau={creneauToRemove}
                         />
                     ))
                     :
                     benevoles.map((benevole : Benevole) => (
                             <BenevoleItem
                                 benevole={benevole}
-                                nomZone={undefined}
+                                zone={undefined}
                                 heureDebut={undefined}
                                 heureFin={undefined}
                                 setBenevoleToModif={setBenevoleToModif}
                                 setBenevoleToLink={setBenevoleToLink}
+                                setCreneauToRemove={setCreneauToRemove}
+                                creneau={undefined}
                             />
                     ))
                 }
@@ -169,8 +192,13 @@ const BenevoleList = () => {
                         </div>
                         {displayList(selectedZone)}
                     </>
-                    {benevoleToLink!==undefined &&
+                    {
+                        benevoleToLink!==undefined &&
                         <BenevoleToZoneForm benevole={benevoleToLink} zones={zones!} setBenevoleToLink={setBenevoleToLink}/>
+                    }
+                    {
+                        creneauToRemove!==undefined &&
+                        <div className="removeCreneauButton" onClick={removeCreneau}>Supprimer le créneau</div>
                     }
                 </StyledBenevoleList>
             }

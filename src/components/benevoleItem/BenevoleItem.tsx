@@ -1,9 +1,15 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from "styled-components"
 import Benevole from '../../interfaces/benevole';
+import Creneau from "../../interfaces/creneau";
+import Zone from "../../interfaces/zone";
 
 
-const StyledBenevoleItem = styled.div`
+interface StyledProps {
+    isClicked: boolean;
+}
+
+const StyledBenevoleItem = styled.div<StyledProps>`
 
         display: flex;
         flex-direction: row;
@@ -49,9 +55,14 @@ const StyledBenevoleItem = styled.div`
         }
   
         .creneau{
-          text-align: center;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           width: 70%;
           margin-right: 25%;
+          background-color: ${props => props.isClicked ? "cyan" : "#3655b3"};
+          color: ${props => props.isClicked ? "#884DFF" : "white"}
         }
 
         .addCrenButton{
@@ -69,11 +80,13 @@ const StyledBenevoleItem = styled.div`
 
 interface Props {
     benevole : Benevole;
-    nomZone : String | undefined;
+    zone : Zone | undefined;
     heureDebut : Date | undefined;
     heureFin : Date | undefined;
     setBenevoleToModif : (benevole : Benevole | undefined) => void;
     setBenevoleToLink: (benevole : Benevole | undefined) =>void;
+    setCreneauToRemove: (creneau : Creneau | undefined)=>void;
+    creneau:Creneau|undefined;
 }
 
 const formatDate = (date : Date) => {
@@ -84,25 +97,39 @@ const formatDate = (date : Date) => {
 }
 
 
-const BenevoleItem : React.FC<Props> = ({benevole, nomZone, heureDebut, heureFin, setBenevoleToModif, setBenevoleToLink}) => {
+const BenevoleItem : React.FC<Props> = ({benevole, zone, heureDebut, heureFin, setBenevoleToModif, setBenevoleToLink, setCreneauToRemove, creneau}) => {
+
+    const [clicked, setClicked] = useState(creneau?.benevole._id===benevole._id && creneau?.debut.getTime()===heureDebut?.getTime());
+
+    useEffect(()=>{
+        setClicked(creneau?.benevole._id===benevole._id && creneau?.debut.getTime()===heureDebut?.getTime())
+    }, [creneau])
+
+    const handleClickCreneau = () => {
+        setCreneauToRemove({benevole: benevole, debut: heureDebut!, fin:heureFin!, zone:zone!})
+    };
+
     return (
-        <StyledBenevoleItem onClick={() => {setBenevoleToModif(benevole)}}>
-            <div className="benevInfo">
+        <StyledBenevoleItem isClicked={clicked}>
+            <div className="benevInfo" onClick={() => {setBenevoleToModif(benevole)}}>
                 <div>{benevole.nom}</div>
                 <div>{benevole.prenom}</div>
                 <div>{benevole.email}</div>
-                <div>{nomZone}</div>
+                <div>{zone?.nom}</div>
             </div>
             <div className="creneauRelated">
                 {
                     heureDebut ?
-                    <div className="creneau">{heureDebut.toLocaleDateString("fr-FR", {
+                    <div className="creneau"
+                         onClick={()=>handleClickCreneau()}>
+                        {heureDebut.toLocaleDateString("fr-FR", {
                         day: "2-digit",
                         month: "2-digit",
                         year: "numeric"
-                      }) + formatDate(heureDebut) + " - " + formatDate(heureFin!)}</div>
+                      }) + formatDate(heureDebut) + " - " + formatDate(heureFin!)}
+                    </div>
                     :
-                    <div>{" - "}</div>
+                    <div></div>
                 }
                 <div onClick={()=>setBenevoleToLink(benevole)} className="addCrenButton">+</div>
                 </div>
