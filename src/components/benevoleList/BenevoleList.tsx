@@ -4,6 +4,7 @@ import Benevole from '../../interfaces/benevole';
 import styled from 'styled-components';
 import axios from 'axios';
 import BenevoleForm from '../benevoleForm/BenevoleForm';
+import BenevoleToZoneForm from "../benoleToZoneForm/benevoleToZoneForm";
 import Zone from '../../interfaces/zone';
 import BenevoleZone from '../../interfaces/benevoleZone';
 import Select, {SingleValue} from 'react-select'
@@ -14,10 +15,25 @@ const StyledBenevoleList = styled.div`
     width: 100%;
 
     .list {
+        border-radius: 25px;
+        height: 40px;
+        margin-bottom: 5px;
+        margin-top: 15px;
         display: flex;
         flex-direction: row;
-        justify-content: space-evenly;
+        align-items: center;
         width: 100%;
+        background-color: #4d4dff;
+        gap: 7%;
+    }
+  
+    .list > *{
+      width: 150px;
+      text-align: center;
+    }
+    .concreteList{
+        background-color: #3655b3;
+        color: white;
     }
 
 `
@@ -31,12 +47,13 @@ interface Option {
 
 const BenevoleList = () => {
 
-    const [zones, setZones] = useState(null)
+    const [zones, setZones] = useState<Zone[]|null>(null)
     const [benevoles, setBenevoles] = useState<Benevole[]>([])
     const [isMount, setIsMount] = useState(false)
     const [selectedZone, setSelectedZone] = useState<Option>({value: null, label:"Tous les Bénévoles"})
     const [optionsSelectZones, setOptionsSelectZone] = useState<Option[]>([])
     const [benevoleToModif, setBenevoleToModif] = useState<Benevole | undefined>(undefined)
+    const [benevoleToLink, setBenevoleToLink] = useState<Benevole | undefined>(undefined)
 
     useEffect(() => {
         //Fetch benevoles from the api
@@ -51,7 +68,7 @@ const BenevoleList = () => {
             setBenevoles(resp.data)
             axios.get(process.env.REACT_APP_API_URL + "zones").then((resp) => {
                 setZones(resp.data)
-                for (let zone of resp.data){
+                for (let zone of resp.data) {
                     options.push({
                         value: zone,
                         label: zone.nom
@@ -97,20 +114,26 @@ const BenevoleList = () => {
                     <div>Nom</div>
                     <div>Prénom</div>
                     <div>Email</div>
-                    <div>Zone</div>
-                    <div>Créneau</div>
-                    <div>Ajouter un créneau</div>
-                    <div>Modifier</div>
+                    {
+                        zone.value!=null &&
+                        <div>Zone</div>
+                    }
+                    {
+                        zone.value!=null &&
+                        <div>Créneau</div>
+                    }
                 </div>
+                <div className="concreteList">
                 {
                     zone.value != null ? 
                     zone.value.benevoles.map((benevole : BenevoleZone) => (
-                            <BenevoleItem
+                        <BenevoleItem
                             benevole={benevole.benevole}
                             nomZone={zone.label}
                             heureDebut={new Date(benevole.heureDebut)}
                             heureFin={new Date(benevole.heureFin)}
                             setBenevoleToModif={setBenevoleToModif}
+                            setBenevoleToLink={setBenevoleToLink}
                         />
                     ))
                     :
@@ -121,9 +144,11 @@ const BenevoleList = () => {
                                 heureDebut={undefined}
                                 heureFin={undefined}
                                 setBenevoleToModif={setBenevoleToModif}
+                                setBenevoleToLink={setBenevoleToLink}
                             />
                     ))
                 }
+                </div>
             </>
         )
     }
@@ -144,6 +169,9 @@ const BenevoleList = () => {
                         </div>
                         {displayList(selectedZone)}
                     </>
+                    {benevoleToLink!==undefined &&
+                        <BenevoleToZoneForm benevole={benevoleToLink} zones={zones!} setBenevoleToLink={setBenevoleToLink}/>
+                    }
                 </StyledBenevoleList>
             }
         </>

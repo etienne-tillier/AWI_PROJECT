@@ -10,9 +10,22 @@ interface StyledHomeProps {
     }
 
 const StyledHome = styled.div<StyledHomeProps>`
-
+  
     height: 100%;
-    width: 100%;
+    width: 70%;
+    margin-left: 15%;
+    margin-right: 15%;
+
+    @media screen and (max-width: 1200px) {
+      width: 90%;
+      margin-left: 5%;
+      margin-right: 5%;
+    }
+    @media screen and (max-width: 900px) {
+      width: 98%;
+      margin-left: 1%;
+      margin-right: 1%;
+    }
 
     .menu{
         width: 50%;
@@ -22,7 +35,7 @@ const StyledHome = styled.div<StyledHomeProps>`
         flex-direction: row;
 
         .benevoleButton{
-            background-color: ${props => props.isJeuProps ? "white" : "red"};
+            background-color: ${props => props.isJeuProps ? "white" : "#884DFF"};
             width: 100%;
             text-align: center;
             font-weight: bold;
@@ -34,7 +47,7 @@ const StyledHome = styled.div<StyledHomeProps>`
         }
 
         .jeuButton{
-            background-color: ${props => props.isJeuProps ? "orange" : "white"};
+            background-color: ${props => props.isJeuProps ? "#36b3b3" : "white"};
             width: 100%;
             text-align: center;
             font-weight: bold;
@@ -46,7 +59,7 @@ const StyledHome = styled.div<StyledHomeProps>`
     }
 
     .title{
-        color: red;
+        color: #4d4dff;
     }
 
 `

@@ -19,10 +19,11 @@ interface Option {
 
 interface Props{
     benevole : Benevole
-    zones : [Zone]
+    zones : Zone[]
+    setBenevoleToLink: (benevole : Benevole | undefined) =>void;
 }
 
-const BenevoleToZoneForm : React.FC<Props> = ({benevole, zones}) => {
+const BenevoleToZoneForm : React.FC<Props> = ({benevole, zones, setBenevoleToLink}) => {
 
     const [confirmationText, setConfirmationText] = useState("")
     const [isSelectedDate, setSelected] = useState(false)
@@ -40,15 +41,18 @@ const BenevoleToZoneForm : React.FC<Props> = ({benevole, zones}) => {
     })
 
     const onSubmit = (e:any) => {
+        e.preventDefault()
         if(zone!==null){
-            e.preventDefault()
+            const dateAndHour1 = selectedDate.setHours(beginningHour, 0, 0, 0)
+            const dateAndHour2 = selectedDate.setHours(endingHour, 0, 0, 0)
             axios.patch(process.env.REACT_APP_API_URL + "zones//addBenevoleTo/" + zone!.value, {
-                heureDebut: beginningHour,
-                heureFin: endingHour,
-                benevole: benevole
+                heureDebut: new Date(dateAndHour1).toJSON(),
+                heureFin: new Date(dateAndHour2).toJSON(),
+                benevole: benevole._id
             }).then((resp) => {
                 if (resp.status == 200) {
                     setConfirmationText("Le bénévole a bien été ajouté au créneau saisi sur la zone sélectionnée !")
+                    setBenevoleToLink(undefined);
                 } else {
                     setConfirmationText("Erreur : " + resp.data.message);
                 }
@@ -60,7 +64,9 @@ const BenevoleToZoneForm : React.FC<Props> = ({benevole, zones}) => {
 
     return (
         <StyledForm>
-            <p>{confirmationText}</p>
+            <div id="benevRemind">
+                <p>Ajout de créneau pour : {benevole.nom} {benevole.prenom}</p>
+            </div>
             <form onSubmit={onSubmit}>
                 <Select id="zoneSelection"
                         required
@@ -98,6 +104,7 @@ const BenevoleToZoneForm : React.FC<Props> = ({benevole, zones}) => {
                             />
                         </div>
                         <button>Ajouter au créneau</button>
+                        <p>{confirmationText}</p>
                     </div>
                 }
             </form>
