@@ -120,9 +120,19 @@ const BenevoleList = () => {
             id: creneauToRemove!.benevole._id,
             heureDebut: creneauToRemove!.debut
         }).then(()=>{
+            removeCreneauList(creneauToRemove!)
             setCreneauToRemove(undefined);
-            //TODO refresh list ?
         })
+    }
+
+    const removeCreneauList = (creneauToDel : Creneau) => {
+        let currentZone = selectedZone;
+        console.log(new Date(currentZone.value!.benevoles[0].heureDebut).getTime().toString())
+        console.log(new Date(creneauToDel.debut).getTime().toString())
+        currentZone.value!.benevoles.filter((benevoleZone) => benevoleZone.benevole._id !== creneauToDel.benevole._id &&
+                                                            new Date(benevoleZone.heureDebut).getTime().toString() !== new Date(creneauToDel.debut).getTime().toString())
+        console.log(currentZone)
+        setSelectedZone(currentZone)
     }
 
     
