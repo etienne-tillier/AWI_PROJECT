@@ -7,6 +7,7 @@ import Zone from "../../interfaces/zone";
 
 interface StyledProps {
     isClicked: boolean;
+    selected: boolean;
 }
 
 const StyledBenevoleItem = styled.div<StyledProps>`
@@ -33,9 +34,12 @@ const StyledBenevoleItem = styled.div<StyledProps>`
   
         .benevInfo{
           width: 70%;
+          height: 40px;
           display: flex;
           flex-direction: row;
           align-items: center;
+          background-color: ${props => props.selected ? "cyan" : "#3655b3"};
+          color: ${props => props.selected ? "#884DFF" : "white"};
           padding-right: 0;
           gap: 9%;
         }
@@ -86,6 +90,7 @@ interface Props {
     setBenevoleToModif : (benevole : Benevole | undefined) => void;
     setBenevoleToLink: (benevole : Benevole | undefined) =>void;
     setCreneauToRemove: (creneau : Creneau | undefined)=>void;
+    selected : boolean;
     creneau:Creneau|undefined;
 }
 
@@ -97,7 +102,7 @@ const formatDate = (date : Date) => {
 }
 
 
-const BenevoleItem : React.FC<Props> = ({benevole, zone, heureDebut, heureFin, setBenevoleToModif, setBenevoleToLink, setCreneauToRemove, creneau}) => {
+const BenevoleItem : React.FC<Props> = ({benevole, zone, heureDebut, heureFin, setBenevoleToModif, setBenevoleToLink, setCreneauToRemove, creneau, selected}) => {
 
     const [clicked, setClicked] = useState(creneau?.benevole._id===benevole._id && creneau?.debut.getTime()===heureDebut?.getTime());
 
@@ -110,7 +115,7 @@ const BenevoleItem : React.FC<Props> = ({benevole, zone, heureDebut, heureFin, s
     };
 
     return (
-        <StyledBenevoleItem isClicked={clicked}>
+        <StyledBenevoleItem isClicked={clicked} selected={selected}>
             <div className="benevInfo" onClick={() => {setBenevoleToModif(benevole)}}>
                 <div>{benevole.nom}</div>
                 <div>{benevole.prenom}</div>

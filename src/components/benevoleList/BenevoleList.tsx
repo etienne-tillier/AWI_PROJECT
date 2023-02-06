@@ -63,9 +63,24 @@ const BenevoleList = () => {
     const [benevoleToModif, setBenevoleToModif] = useState<Benevole | undefined>(undefined)
     const [benevoleToLink, setBenevoleToLink] = useState<Benevole | undefined>(undefined)
     const [creneauToRemove, setCreneauToRemove] = useState<Creneau|undefined>(undefined)
+    const [selectedBenevole, setSelectedBenevole] = useState<Benevole | undefined>(undefined)
 
     useEffect(() => {
         //Fetch benevoles from the api
+        axios.get(process.env.REACT_APP_API_URL + "benevoles").then((resp) => {
+            setBenevoles(resp.data)
+                fetchZones()
+                setIsMount(true)
+        })
+      }, []);
+
+      useEffect(() => {
+        if (isMount){
+            fetchZones()
+        }
+        }, [benevoles])
+
+    const fetchZones = () => {
         let options : Option[] = []
         options.push(
             {
@@ -73,21 +88,17 @@ const BenevoleList = () => {
                 label: "Tous les Bénévoles"
             }
         )
-        axios.get(process.env.REACT_APP_API_URL + "benevoles").then((resp) => {
-            setBenevoles(resp.data)
-            axios.get(process.env.REACT_APP_API_URL + "zones").then((resp) => {
-                setZones(resp.data)
-                for (let zone of resp.data) {
-                    options.push({
-                        value: zone,
-                        label: zone.nom
-                    })
-                }
-                setOptionsSelectZone(options)
-                setIsMount(true)
-            })
+        axios.get(process.env.REACT_APP_API_URL + "zones").then((resp) => {
+            setZones(resp.data)
+            for (let zone of resp.data) {
+                options.push({
+                    value: zone,
+                    label: zone.nom
+                })
+            }
+            setOptionsSelectZone(options)
         })
-      }, [])
+    }
 
     const updateBenevole = (benevoles: Benevole[], updatedBenevole: Benevole) => {
         const newBenevoles = [...benevoles];
@@ -177,6 +188,7 @@ const BenevoleList = () => {
                             setBenevoleToModif={setBenevoleToModif}
                             setBenevoleToLink={setBenevoleToLink}
                             setCreneauToRemove={setCreneauToRemove}
+                            selected={(benevole.benevole._id === benevoleToModif?._id ? true : false)}
                             creneau={creneauToRemove}
                         />
                     ))
@@ -190,6 +202,7 @@ const BenevoleList = () => {
                                 setBenevoleToModif={setBenevoleToModif}
                                 setBenevoleToLink={setBenevoleToLink}
                                 setCreneauToRemove={setCreneauToRemove}
+                                selected={(benevole._id === benevoleToModif?._id ? true : false)}
                                 creneau={undefined}
                             />
                     ))

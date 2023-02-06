@@ -47,12 +47,12 @@ const BenevoleToZoneForm : React.FC<Props> = ({benevole, zones, setBenevoleToLin
         if(zone!==null){
             const dateAndHour1 = selectedDate.setHours(beginningHour, 0, 0, 0)
             const dateAndHour2 = selectedDate.setHours(endingHour, 0, 0, 0)
-            axios.patch(process.env.REACT_APP_API_URL + "zones//addBenevoleTo/" + zone!.value._id, {
+            axios.patch(process.env.REACT_APP_API_URL + "zones/addBenevoleTo/" + zone!.value._id, {
                 heureDebut: new Date(dateAndHour1).toJSON(),
                 heureFin: new Date(dateAndHour2).toJSON(),
                 benevole: benevole._id
             }).then((resp) => {
-                if (resp.status == 200) {
+                if (resp.status === 200) {
                     addCreneauList({
                         benevole : benevole,
                         debut : new Date(dateAndHour1),
