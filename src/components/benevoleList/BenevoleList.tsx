@@ -183,7 +183,8 @@ const BenevoleList = () => {
                 <StyledBenevoleList>
                     <>
                         <BenevoleForm onAddToArray={handleAddToArray} benevole={benevoleToModif}
-                            setBenevoleToModif={setBenevoleToModif} onUpdateToArray={handleUpdateBenevole}/>
+                            setBenevoleToModif={setBenevoleToModif} onUpdateToArray={handleUpdateBenevole}
+                            onDelToArray={handleDelToArray}/>
                         <div className="select">
                             <Select
                                 onChange={handleChange}

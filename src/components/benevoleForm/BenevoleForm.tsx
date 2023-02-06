@@ -17,9 +17,10 @@ interface Props {
     onUpdateToArray: (newArrayValue: Benevole) => void;
     benevole : Benevole | undefined;
     setBenevoleToModif : (benevole : Benevole | undefined) => void;
+    onDelToArray : (benevole : Benevole) => void;
   }
 
-const BenevoleForm : React.FC<Props> = ({onAddToArray, benevole, setBenevoleToModif, onUpdateToArray}) => {
+const BenevoleForm : React.FC<Props> = ({onAddToArray, benevole, setBenevoleToModif, onUpdateToArray, onDelToArray}) => {
 
     const [confirmationText, setConfirmationText] = useState("")
     const [nomBenevole, setNomBenevole] = useState<string>("")
@@ -102,6 +103,18 @@ const BenevoleForm : React.FC<Props> = ({onAddToArray, benevole, setBenevoleToMo
         })
     }
 
+    const handleDelBenevole = () => {
+
+        axios.delete(process.env.REACT_APP_API_URL + "benevoles/" + benevole?._id).then((resp) => {
+            if(resp.status == 200){
+                onDelToArray(benevole!)
+                setConfirmationText("Le bénévole a bien été supprimé ! ")
+                resetIndexes()
+            }
+        })
+
+    }
+
     return (
         <>
             {isMount &&
@@ -119,7 +132,10 @@ const BenevoleForm : React.FC<Props> = ({onAddToArray, benevole, setBenevoleToMo
                         <button>{benevole ? "Modifier" : "Créer"}</button>
                     </form>
                     { benevole &&
-                        <div className="button" onClick={() => {handleClickCreateBenevoleButton()}}>Créer un bénévole</div>
+                        <>
+                            <div className="button" onClick={() => {handleDelBenevole()}}>Supprimer le bénévole</div>
+                            <div className="button" onClick={() => {handleClickCreateBenevoleButton()}}>Créer un bénévole</div>
+                        </>
                     }
                         
                 </StyledBenevoleForm>
