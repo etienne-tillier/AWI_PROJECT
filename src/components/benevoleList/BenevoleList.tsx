@@ -5,9 +5,9 @@ import Creneau from "../../interfaces/creneau";
 import styled from 'styled-components';
 import axios from 'axios';
 import BenevoleForm from '../benevoleForm/BenevoleForm';
+import BenevoleZone from '../../interfaces/benevoleZone';
 import BenevoleToZoneForm from "../benoleToZoneForm/benevoleToZoneForm";
 import Zone from '../../interfaces/zone';
-import BenevoleZone from '../../interfaces/benevoleZone';
 import Select, {SingleValue} from 'react-select'
 
 
@@ -112,7 +112,6 @@ const BenevoleList = () => {
 
     const handleChange = (newValue: SingleValue<{}>) => {
         setSelectedZone(newValue as Option);
-        console.log(selectedZone)
     };
 
     const removeCreneau = ()=>{
@@ -127,12 +126,23 @@ const BenevoleList = () => {
 
     const removeCreneauList = (creneauToDel : Creneau) => {
         let currentZone = selectedZone;
-        console.log(new Date(currentZone.value!.benevoles[0].heureDebut).getTime().toString())
-        console.log(new Date(creneauToDel.debut).getTime().toString())
-        currentZone.value!.benevoles.filter((benevoleZone) => benevoleZone.benevole._id !== creneauToDel.benevole._id &&
+        currentZone.value!.benevoles = currentZone.value!.benevoles.filter((benevoleZone) => benevoleZone.benevole._id !== creneauToDel.benevole._id ||
                                                             new Date(benevoleZone.heureDebut).getTime().toString() !== new Date(creneauToDel.debut).getTime().toString())
-        console.log(currentZone)
         setSelectedZone(currentZone)
+    }
+
+    const addCreneauList = (newCreneau : Creneau) => {
+        let currentZone = newCreneau.zone;
+        let newZones = zones!.filter((zone) => zone._id !== newCreneau.zone._id)
+
+        currentZone.benevoles.push({
+            benevole : newCreneau.benevole,
+            heureDebut : newCreneau.debut,
+            heureFin : newCreneau.fin
+        })
+        newZones?.push(currentZone)
+        setZones(newZones)
+        //setSelectedZone(currentZone)
     }
 
     
@@ -205,7 +215,8 @@ const BenevoleList = () => {
                     </>
                     {
                         benevoleToLink!==undefined &&
-                        <BenevoleToZoneForm benevole={benevoleToLink} zones={zones!} setBenevoleToLink={setBenevoleToLink}/>
+                        <BenevoleToZoneForm benevole={benevoleToLink} zones={zones!}
+                                            setBenevoleToLink={setBenevoleToLink} addCreneauList={addCreneauList}/>
                     }
                     {
                         creneauToRemove!==undefined &&

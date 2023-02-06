@@ -8,12 +8,13 @@ import styled from 'styled-components';
 import axios from "axios";
 import Benevole from "../../interfaces/benevole";
 import Zone from "../../interfaces/zone"
+import Creneau from '../../interfaces/creneau';
 
 const StyledForm = styled.div`
     
 `
 interface Option {
-    value: String;
+    value: Zone;
     label: String;
 }
 
@@ -21,9 +22,10 @@ interface Props{
     benevole : Benevole
     zones : Zone[]
     setBenevoleToLink: (benevole : Benevole | undefined) =>void;
+    addCreneauList: (newCreneau : Creneau) =>void;
 }
 
-const BenevoleToZoneForm : React.FC<Props> = ({benevole, zones, setBenevoleToLink}) => {
+const BenevoleToZoneForm : React.FC<Props> = ({benevole, zones, setBenevoleToLink, addCreneauList}) => {
 
     const [confirmationText, setConfirmationText] = useState("")
     const [isSelectedDate, setSelected] = useState(false)
@@ -35,7 +37,7 @@ const BenevoleToZoneForm : React.FC<Props> = ({benevole, zones, setBenevoleToLin
     let zoneOptions : Option[] = []
     zones.forEach(zone=>{
         zoneOptions.push({
-            value: zone._id,
+            value: zone,
             label: zone.nom
         })
     })
@@ -45,12 +47,18 @@ const BenevoleToZoneForm : React.FC<Props> = ({benevole, zones, setBenevoleToLin
         if(zone!==null){
             const dateAndHour1 = selectedDate.setHours(beginningHour, 0, 0, 0)
             const dateAndHour2 = selectedDate.setHours(endingHour, 0, 0, 0)
-            axios.patch(process.env.REACT_APP_API_URL + "zones//addBenevoleTo/" + zone!.value, {
+            axios.patch(process.env.REACT_APP_API_URL + "zones//addBenevoleTo/" + zone!.value._id, {
                 heureDebut: new Date(dateAndHour1).toJSON(),
                 heureFin: new Date(dateAndHour2).toJSON(),
                 benevole: benevole._id
             }).then((resp) => {
                 if (resp.status == 200) {
+                    addCreneauList({
+                        benevole : benevole,
+                        debut : new Date(dateAndHour1),
+                        fin : new Date(dateAndHour2),
+                        zone : zone.value!
+                    })
                     setConfirmationText("Le bénévole a bien été ajouté au créneau saisi sur la zone sélectionnée !")
                     setBenevoleToLink(undefined);
                 } else {
