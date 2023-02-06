@@ -125,10 +125,13 @@ const BenevoleList = () => {
     }
 
     const removeCreneauList = (creneauToDel : Creneau) => {
-        let currentZone = selectedZone;
-        currentZone.value!.benevoles = currentZone.value!.benevoles.filter((benevoleZone) => benevoleZone.benevole._id !== creneauToDel.benevole._id ||
+        //let currentZone = selectedZone;
+        let currentZone = creneauToDel.zone;
+        let newZones = zones!.filter((zone) => zone._id !== creneauToDel.zone._id)
+        currentZone.benevoles = currentZone.benevoles.filter((benevoleZone) => benevoleZone.benevole._id !== creneauToDel.benevole._id ||
                                                             new Date(benevoleZone.heureDebut).getTime().toString() !== new Date(creneauToDel.debut).getTime().toString())
-        setSelectedZone(currentZone)
+        newZones.push(currentZone)
+        //setSelectedZone(currentZone)
     }
 
     const addCreneauList = (newCreneau : Creneau) => {
