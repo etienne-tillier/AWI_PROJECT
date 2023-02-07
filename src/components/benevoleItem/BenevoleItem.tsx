@@ -11,74 +11,68 @@ interface StyledProps {
 }
 
 const StyledBenevoleItem = styled.div<StyledProps>`
-
+  
+        text-align: left;
+        border-bottom: solid 1px;
+        border-bottom-color: grey;
+        margin-left: 3%;
+        margin-right: 5%;
         display: flex;
         flex-direction: row;
         align-items: center;
-        text-align: left;
-        height: 40px;
-        border-bottom: solid 1px;
-        border-bottom-color: grey;
-        border-radius: 5px;
-        margin-right: 2%;
-        padding-left: 2%;
-        padding-right: 2%;
-        position:relative;
+        justify-content: space-between;
+        height: 70px;
   
         .benevInfo:hover, .creneau:hover{
           cursor: pointer;
-          background-color: cyan;
+          background-color: #bfcfff;
           color:#884DFF;
-          height: 40px;
         }
   
         .benevInfo{
-          width: 70%;
-          height: 40px;
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          background-color: ${props => props.selected ? "cyan" : "#3655b3"};
+          background-color: ${props => props.selected ? "#bfcfff" : "#3655b3"};
           color: ${props => props.selected ? "#884DFF" : "white"};
           padding-right: 0;
-          gap: 9%;
-        }
-  
-        .benevInfo > *{
-          width: 150px;
-          text-align: center;
-        }
-  
-        .creneauRelated{
-          width: 22%;
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          right: 2%;
-          position:absolute;
         }
   
         .creneau{
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 70%;
-          margin-right: 25%;
-          background-color: ${props => props.isClicked ? "cyan" : "#3655b3"};
+          background-color: ${props => props.isClicked ? "#bfcfff" : "#3655b3"};
           color: ${props => props.isClicked ? "#884DFF" : "white"}
+        }
+        
+        .creneau, .benevInfo{
+          padding-left: 2px;
+          border-radius: 3px;
+          height: 25px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: left;
+          gap: 2%;
         }
 
         .addCrenButton{
           font-weight: bold;
-          font-size: 22px;
-          font-size: 22px;
+          font-size: 26px;
           text-align: center;
-          padding: 0;
+          padding-left: 1%;
+          padding-right: 1%;
         }
   
         .addCrenButton:hover{
           cursor: pointer;
+        }
+        
+        .benevole{
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: left;
+          gap: 5px;
+        }
+  
+        .name{
+          font-weight: bold;
         }
 `
 
@@ -116,28 +110,31 @@ const BenevoleItem : React.FC<Props> = ({benevole, zone, heureDebut, heureFin, s
 
     return (
         <StyledBenevoleItem isClicked={clicked} selected={selected}>
-            <div className="benevInfo" onClick={() => {setBenevoleToModif(benevole)}}>
-                <div>{benevole.nom}</div>
-                <div>{benevole.prenom}</div>
-                <div>{benevole.email}</div>
-                <div>{zone?.nom}</div>
-            </div>
-            <div className="creneauRelated">
-                {
-                    heureDebut ?
-                    <div className="creneau"
-                         onClick={()=>handleClickCreneau()}>
-                        {heureDebut.toLocaleDateString("fr-FR", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric"
-                      }) + formatDate(heureDebut) + " - " + formatDate(heureFin!)}
-                    </div>
-                    :
-                    <div></div>
-                }
-                <div onClick={()=>setBenevoleToLink(benevole)} className="addCrenButton">+</div>
+            <div className="benevole">
+                <div className="benevInfo" onClick={() => {setBenevoleToModif(benevole)}}>
+                    <div className="name">{benevole.nom} {benevole.prenom}</div>
+                    <div>-</div>
+                    <div>{benevole.email}</div>
                 </div>
+                <div className="creneauRelated">
+                    {
+                        heureDebut ?
+                        <div className="creneau"
+                             onClick={()=>handleClickCreneau()}>
+                            {"Le " + heureDebut.toLocaleDateString("fr-FR", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric"
+                          }) + " de " + formatDate(heureDebut) + " à " + formatDate(heureFin!)}
+                            <div>-</div>
+                            <div>{zone?.nom}</div>
+                        </div>
+                        :
+                        <div></div>
+                    }
+                </div>
+            </div>
+            <div onClick={()=>setBenevoleToLink(benevole)} className="addCrenButton">+</div>
         </StyledBenevoleItem>
     );
 };

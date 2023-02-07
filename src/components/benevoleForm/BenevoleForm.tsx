@@ -68,7 +68,7 @@ const BenevoleForm : React.FC<Props> = ({onAddToArray, benevole, setBenevoleToMo
             prenom: document.getElementsByTagName("input")[1].value,
             email: document.getElementsByTagName("input")[2].value
           }).then((resp) => {
-            if (resp.status == 200) {
+            if (resp.status === 200) {
                 onAddToArray(resp.data)
                 setConfirmationText("La création du bénévole à bien été faite !")
             }
@@ -86,7 +86,7 @@ const BenevoleForm : React.FC<Props> = ({onAddToArray, benevole, setBenevoleToMo
             prenom: prenomBenevole,
             email: emailBenevole
         }).then((resp) => {
-            if (resp.status == 200) {
+            if (resp.status === 200) {
                 onUpdateToArray({
                     _id : benevole!._id,
                     nom : nomBenevole,
@@ -106,7 +106,7 @@ const BenevoleForm : React.FC<Props> = ({onAddToArray, benevole, setBenevoleToMo
     const handleDelBenevole = () => {
 
         axios.delete(process.env.REACT_APP_API_URL + "benevoles/" + benevole?._id).then((resp) => {
-            if(resp.status == 200){
+            if(resp.status === 200){
                 onDelToArray(benevole!)
                 setConfirmationText("Le bénévole a bien été supprimé ! ")
                 resetIndexes()

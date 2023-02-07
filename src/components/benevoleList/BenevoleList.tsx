@@ -10,30 +10,20 @@ import BenevoleToZoneForm from "../benoleToZoneForm/benevoleToZoneForm";
 import Zone from '../../interfaces/zone';
 import Select, {SingleValue} from 'react-select'
 import Toggle from "./toggleButton/ToggleButton";
+import CreneauSelector from "./creneauSelector/CreneauSelector"
 
 
 const StyledBenevoleList = styled.div`
 
     width: 100%;
-
-    .list {
-        border-radius: 25px;
-        height: 40px;
-        margin-bottom: 5px;
-        margin-top: 15px;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        width: 100%;
-        background-color: #4d4dff;
-        gap: 7%;
-    }
   
     .list > *{
       width: 150px;
       text-align: center;
     }
     .concreteList{
+        border-radius: 5px;
+        margin-top: 1%;
         background-color: #3655b3;
         color: white;
     }
@@ -65,6 +55,10 @@ const BenevoleList = () => {
     const [benevoleToLink, setBenevoleToLink] = useState<Benevole | undefined>(undefined)
     const [creneauToRemove, setCreneauToRemove] = useState<Creneau|undefined>(undefined)
     const [toggled, setToggled]=useState(false);
+    const [selectedFilterCreneau, setSelectedFilterCreneau] = useState<{debut : number, fin : number}>({
+        debut: new Date().setHours(0,0,0,0),
+        fin : new Date().setHours(23,0,0,0),
+    })
 
     useEffect(() => {
         //Fetch benevoles from the api
@@ -80,6 +74,13 @@ const BenevoleList = () => {
             fetchZones()
         }
         }, [benevoles])
+
+    useEffect(()=>{
+        setCreneauToRemove(undefined)
+        setBenevoleToLink(undefined)
+        setBenevoleToModif(undefined)
+        setSelectedZone({value: null, label:"Tous les Bénévoles"})
+    }, [toggled])
 
     const fetchZones = () => {
         let options : Option[] = []
@@ -177,22 +178,9 @@ const BenevoleList = () => {
     }
 
     
-    const displayList = (zone : Option) => {
+    const displayListByZone = (zone : Option) => {
         return (
             <>
-                <div className="list">
-                    <div>Nom</div>
-                    <div>Prénom</div>
-                    <div>Email</div>
-                    {
-                        zone.value!=null &&
-                        <div>Zone</div>
-                    }
-                    {
-                        zone.value!=null &&
-                        <div>Créneau</div>
-                    }
-                </div>
                 <div className="concreteList">
                 {
                     zone.value != null ? 
@@ -239,13 +227,25 @@ const BenevoleList = () => {
                             setBenevoleToModif={setBenevoleToModif} onUpdateToArray={handleUpdateBenevole}
                             onDelToArray={handleDelToArray}/>
                         <Toggle toggled={toggled} onClick={setToggled}/>
-                        <div className="select">
-                            <Select
-                                onChange={handleChange}
-                                options={optionsSelectZones}
-                            />
-                        </div>
-                        {displayList(selectedZone)}
+                        { toggled ?
+                            <div>
+                                <CreneauSelector setSelectedCreneau={setSelectedFilterCreneau}/>
+                                <p>Date debut : {new Date(selectedFilterCreneau.debut).toString()}</p>
+                                <p>Date fin : {new Date(selectedFilterCreneau.fin).toString()}</p>
+                                //TODO : mettre fct qui affiche la liste des creneaux
+                            </div>
+                            :
+                            <div>
+                                <div className="select">
+                                    <Select
+                                        onChange={handleChange}
+                                        options={optionsSelectZones}
+                                        placeholder="Sélectionner une zone"
+                                    />
+                                </div>
+                                {displayListByZone(selectedZone)}
+                            </div>
+                        }
                     </>
                     {
                         benevoleToLink!==undefined &&

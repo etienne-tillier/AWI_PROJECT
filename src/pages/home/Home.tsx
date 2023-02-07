@@ -12,9 +12,9 @@ interface StyledHomeProps {
 const StyledHome = styled.div<StyledHomeProps>`
   
     height: 100%;
-    width: 70%;
-    margin-left: 15%;
-    margin-right: 15%;
+    width: 60%;
+    margin-left: 20%;
+    margin-right: 20%;
 
     @media screen and (max-width: 1200px) {
       width: 90%;
