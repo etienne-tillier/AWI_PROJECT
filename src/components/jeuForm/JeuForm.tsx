@@ -57,7 +57,7 @@ const JeuForm : React.FC<Props> = ({onAddToArray}) => {
                     nom : typeChoisi?.label
                 }
             }).then((resp) => {
-                if (resp.status == 200){
+                if (resp.status === 200){
                     onAddToArray(resp.data)
                     setConfirmationText("Le jeu a bien été crée")
                 }

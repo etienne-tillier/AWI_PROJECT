@@ -9,6 +9,7 @@ import BenevoleZone from '../../interfaces/benevoleZone';
 import BenevoleToZoneForm from "../benoleToZoneForm/benevoleToZoneForm";
 import Zone from '../../interfaces/zone';
 import Select, {SingleValue} from 'react-select'
+import Toggle from "./toggleButton/ToggleButton";
 
 
 const StyledBenevoleList = styled.div`
@@ -63,7 +64,7 @@ const BenevoleList = () => {
     const [benevoleToModif, setBenevoleToModif] = useState<Benevole | undefined>(undefined)
     const [benevoleToLink, setBenevoleToLink] = useState<Benevole | undefined>(undefined)
     const [creneauToRemove, setCreneauToRemove] = useState<Creneau|undefined>(undefined)
-    const [selectedBenevole, setSelectedBenevole] = useState<Benevole | undefined>(undefined)
+    const [toggled, setToggled]=useState(false);
 
     useEffect(() => {
         //Fetch benevoles from the api
@@ -237,6 +238,7 @@ const BenevoleList = () => {
                         <BenevoleForm onAddToArray={handleAddToArray} benevole={benevoleToModif}
                             setBenevoleToModif={setBenevoleToModif} onUpdateToArray={handleUpdateBenevole}
                             onDelToArray={handleDelToArray}/>
+                        <Toggle toggled={toggled} onClick={setToggled}/>
                         <div className="select">
                             <Select
                                 onChange={handleChange}

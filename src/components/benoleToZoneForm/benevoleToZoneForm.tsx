@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import DatePicker from 'react-datepicker'
 import { NumericStepper } from '@anatoliygatt/numeric-stepper';
 import Select from 'react-select'
@@ -10,9 +10,18 @@ import Benevole from "../../interfaces/benevole";
 import Zone from "../../interfaces/zone"
 import Creneau from '../../interfaces/creneau';
 
-const StyledForm = styled.div`
-    
+
+interface StyledProps {
+    isErrMsg: boolean;
+}
+
+const StyledForm = styled.div<StyledProps>`
+  
+    #infoText{
+      color: ${props=>props.isErrMsg ? "red" : "green"}
+    }
 `
+
 interface Option {
     value: Zone;
     label: String;
@@ -30,9 +39,10 @@ const BenevoleToZoneForm : React.FC<Props> = ({benevole, zones, setBenevoleToLin
     const [confirmationText, setConfirmationText] = useState("")
     const [isSelectedDate, setSelected] = useState(false)
     const [selectedDate, setSelectedDate] = useState(new Date())
-    const [beginningHour, setBeginningHour] = useState(12)
-    const [endingHour, setEndingHour] = useState(13)
+    const [beginningHour, setBeginningHour] = useState<number>(12)
+    const [endingHour, setEndingHour] = useState<number>(beginningHour+1)
     const [zone, setZone] = useState<Option | null>(null);
+    const [isErrMsg, setErrMsg] = useState(false);
 
     let zoneOptions : Option[] = []
     zones.forEach(zone=>{
@@ -47,31 +57,39 @@ const BenevoleToZoneForm : React.FC<Props> = ({benevole, zones, setBenevoleToLin
         if(zone!==null){
             const dateAndHour1 = selectedDate.setHours(beginningHour, 0, 0, 0)
             const dateAndHour2 = selectedDate.setHours(endingHour, 0, 0, 0)
-            axios.patch(process.env.REACT_APP_API_URL + "zones/addBenevoleTo/" + zone!.value._id, {
-                heureDebut: new Date(dateAndHour1).toJSON(),
-                heureFin: new Date(dateAndHour2).toJSON(),
-                benevole: benevole._id
-            }).then((resp) => {
-                if (resp.status === 200) {
-                    addCreneauList({
-                        benevole : benevole,
-                        debut : new Date(dateAndHour1),
-                        fin : new Date(dateAndHour2),
-                        zone : zone.value!
-                    })
-                    setConfirmationText("Le bénévole a bien été ajouté au créneau saisi sur la zone sélectionnée !")
-                    setBenevoleToLink(undefined);
-                } else {
-                    setConfirmationText("Erreur : " + resp.data.message);
-                }
-            })
+            if(beginningHour>=endingHour){
+                setConfirmationText("L'heure de fin de créneau doit être supérieur à l'heure de début")
+                setErrMsg(true);
+            }else {
+                axios.patch(process.env.REACT_APP_API_URL + "zones/addBenevoleTo/" + zone!.value._id, {
+                    heureDebut: new Date(dateAndHour1).toJSON(),
+                    heureFin: new Date(dateAndHour2).toJSON(),
+                    benevole: benevole._id
+                }).then((resp) => {
+                    if (resp.status === 200) {
+                        addCreneauList({
+                            benevole: benevole,
+                            debut: new Date(dateAndHour1),
+                            fin: new Date(dateAndHour2),
+                            zone: zone.value!
+                        })
+                        setErrMsg(false)
+                        setConfirmationText("Le bénévole a bien été ajouté au créneau saisi sur la zone sélectionnée !")
+                        setBenevoleToLink(undefined);
+                    } else {
+                        setErrMsg(true)
+                        setConfirmationText("Erreur : " + resp.data.message);
+                    }
+                })
+            }
         } else{
+            setErrMsg(true)
             setConfirmationText("Veuillez saisir un zone");
         }
     }
 
     return (
-        <StyledForm>
+        <StyledForm isErrMsg={isErrMsg}>
             <div id="benevRemind">
                 <p>Ajout de créneau pour : {benevole.nom} {benevole.prenom}</p>
             </div>
@@ -112,7 +130,7 @@ const BenevoleToZoneForm : React.FC<Props> = ({benevole, zones, setBenevoleToLin
                             />
                         </div>
                         <button>Ajouter au créneau</button>
-                        <p>{confirmationText}</p>
+                        <p id="infoText">{confirmationText}</p>
                     </div>
                 }
             </form>
