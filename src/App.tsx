@@ -5,6 +5,12 @@ import './App.css';
 function App() {
   return (
     <div className="App">
+      <head>
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+        />
+      </head>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>

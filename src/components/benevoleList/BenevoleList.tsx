@@ -10,7 +10,7 @@ import BenevoleToZoneForm from "../benoleToZoneForm/benevoleToZoneForm";
 import Zone from '../../interfaces/zone';
 import Select, {SingleValue} from 'react-select'
 import Toggle from "./toggleButton/ToggleButton";
-import CreneauSelector from "./creneauSelector/CreneauSelector"
+import CreneauSelector from "../creneauSelector/CreneauSelector"
 
 
 const StyledBenevoleList = styled.div`
@@ -33,6 +33,10 @@ const StyledBenevoleList = styled.div`
     }
     .removeCreneauButton{
       cursor: pointer;
+    }
+  
+    #zoneSelect{
+      width: 350px;
     }
 
 `
@@ -238,6 +242,7 @@ const BenevoleList = () => {
                             <div>
                                 <div className="select">
                                     <Select
+                                        id="zoneSelect"
                                         onChange={handleChange}
                                         options={optionsSelectZones}
                                         placeholder="Sélectionner une zone"

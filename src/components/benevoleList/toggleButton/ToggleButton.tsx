@@ -1,7 +1,12 @@
 import React, {useEffect, useState} from 'react'
 import styled from 'styled-components';
+import {Button} from "@mui/material";
 
 const StyledToggleButton = styled.div`
+  
+  margin-bottom: 4px;
+  margin-top: 2px;
+  
   label {
     position: relative;
     display: inline-block;
@@ -50,6 +55,10 @@ const StyledToggleButton = styled.div`
     line-height: 20px;
     margin-left: 10px;
     cursor: pointer;
+    color: #1976d2;
+    font-family: "Roboto","Helvetica","Arial",sans-serif;
+    font-weight: 500;
+    font-size: 0.875rem;
   }
 
 `
@@ -78,7 +87,7 @@ const Toggle : React.FC<Props> = ({toggled, onClick }) => {
             <label>
                 <input type="checkbox" defaultChecked={isToggled} onClick={callback} />
                 <span />
-                <strong>{label}</strong>
+                <strong>{label.toUpperCase()}</strong>
             </label>
         </StyledToggleButton>
     )

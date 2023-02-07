@@ -4,10 +4,21 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from "axios"
 import Benevole from '../../interfaces/benevole';
+import {Button, TextField} from "@mui/material";
 
 
 const StyledBenevoleForm = styled.div`
-
+  
+  margin-top: 2%;
+  margin-bottom: 1%;
+  
+  #benevForm{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1%;
+    margin-bottom: 5px;
+  }
 
 
 `
@@ -46,7 +57,7 @@ const BenevoleForm : React.FC<Props> = ({onAddToArray, benevole, setBenevoleToMo
         setEmailBenevole("")
     }
 
-    const handleClickCreateBenevoleButton = () => {
+    const cancelModification = () => {
         resetIndexes()
         setBenevoleToModif(undefined)
     }
@@ -70,7 +81,7 @@ const BenevoleForm : React.FC<Props> = ({onAddToArray, benevole, setBenevoleToMo
           }).then((resp) => {
             if (resp.status === 200) {
                 onAddToArray(resp.data)
-                setConfirmationText("La création du bénévole à bien été faite !")
+                setConfirmationText("Bénévole créé avec succès")
             }
             else {
                 setConfirmationText("Il y a eu un problème lors de la création du bénévole")
@@ -95,7 +106,7 @@ const BenevoleForm : React.FC<Props> = ({onAddToArray, benevole, setBenevoleToMo
                 })
                 resetIndexes()
                 setBenevoleToModif(undefined)
-                setConfirmationText("La mise à jour du bénévole à bien été faite !")
+                setConfirmationText("Bénévole modifié avec succès")
             }
             else {
                 setConfirmationText("Il y a eu un problème lors de la mise à jour du bénévole")
@@ -120,22 +131,64 @@ const BenevoleForm : React.FC<Props> = ({onAddToArray, benevole, setBenevoleToMo
             {isMount &&
                 <StyledBenevoleForm>
 
-                
-                    <form onSubmit={onSubmit}>
-                        <label htmlFor="nom">Nom</label>
-                        <input id="inputNom" type="text" name="nom" value={nomBenevole} onChange={e => setNomBenevole(e.target.value)} required minLength={3}/>
-                        <label htmlFor="prenom">Prenom</label>
-                        <input id="inputPrenom" type="text" name="prenom" value={prenomBenevole} onChange={e => setPrenomBenevole(e.target.value)} required minLength={3}/>
-                        <label htmlFor="email">Email</label>
-                        <input id="inputEmail" type="email" name="email"  value={emailBenevole} onChange={e => setEmailBenevole(e.target.value)} required />
-                        <p>{confirmationText}</p>
-                        <button>{benevole ? "Modifier" : "Créer"}</button>
+                    <form onSubmit={onSubmit} id="benevForm">
+                       <TextField
+                            id="inputNom"
+                            label="Nom"
+                            value={nomBenevole}
+                            onChange={e => setNomBenevole(e.target.value)}
+                            required
+                            size="small"
+                            variant="outlined"
+                            inputProps={{
+                                minLength: 2,
+                            }}
+                        />
+                        <TextField
+                            id="inputPrenom"
+                            label="Prenom"
+                            value={prenomBenevole}
+                            onChange={e => setPrenomBenevole(e.target.value)}
+                            required
+                            size="small"
+                            variant="outlined"
+                            inputProps={{
+                                minLength: 2,
+                            }}
+                        />
+                        <TextField
+                            id="inputEmail"
+                            label="Email"
+                            type="email"
+                            value={emailBenevole}
+                            onChange={e => setEmailBenevole(e.target.value)}
+                            required
+                            size="small"
+                            variant="outlined"
+                        />
+                        <Button
+                            variant="contained"
+                            size="small"
+                            type="submit"
+                        >{benevole ? "Modifier" : "Créer"}
+                        </Button>
+                        { benevole &&
+                            <Button
+                                onClick={() => {cancelModification()}}>
+                                Annuler
+                            </Button>
+                        }
                     </form>
+                    <p>{confirmationText}</p>
                     { benevole &&
-                        <>
-                            <div className="button" onClick={() => {handleDelBenevole()}}>Supprimer le bénévole</div>
-                            <div className="button" onClick={() => {handleClickCreateBenevoleButton()}}>Créer un bénévole</div>
-                        </>
+                        <Button
+                            variant="outlined"
+                            size="small"
+                            color="error"
+                            onClick={() => {handleDelBenevole()}}
+                            >
+                            Supprimer le bénévole
+                        </Button>
                     }
                         
                 </StyledBenevoleForm>
