@@ -141,8 +141,23 @@ const BenevoleList = () => {
         let newZones = zones!.filter((zone) => zone._id !== creneauToDel.zone._id)
         currentZone.benevoles = currentZone.benevoles.filter((benevoleZone) => benevoleZone.benevole._id !== creneauToDel.benevole._id ||
                                                             new Date(benevoleZone.heureDebut).getTime().toString() !== new Date(creneauToDel.debut).getTime().toString())
+        
         newZones.push(currentZone)
+        newZones = triZone(newZones)
+        setZones(newZones)
         //setSelectedZone(currentZone)
+    }
+
+    const triZone = (zones: Zone[]) => {
+        return zones.sort((a, b) => {
+            if (a.nom < b.nom) {
+              return -1;
+            }
+            if (a.nom > b.nom) {
+              return 1;
+            }
+            return 0;
+          });
     }
 
     const addCreneauList = (newCreneau : Creneau) => {
@@ -155,6 +170,7 @@ const BenevoleList = () => {
             heureFin : newCreneau.fin
         })
         newZones?.push(currentZone)
+        newZones = triZone(newZones)
         setZones(newZones)
         //setSelectedZone(currentZone)
     }
