@@ -113,10 +113,14 @@ const BenevoleToZoneForm : React.FC<Props> = ({benevole, zones, setBenevoleToLin
                     })
                     setErrMsg(false)
                     setConfirmationText("Le bénévole a bien été ajouté au créneau saisi sur la zone sélectionnée !")
-                    setBenevoleToLink(undefined);
-                } else {
-                    setErrMsg(true)
-                    setConfirmationText("Erreur : " + resp.data.message);
+                    setBenevoleToLink(undefined)
+                }
+            }).catch((err)=>{
+                setErrMsg(true)
+                if(err.response){
+                    setConfirmationText("Erreur : " + err.response.data.message);
+                } else{
+                    setConfirmationText(err.request);
                 }
             })
         } else{
@@ -138,7 +142,6 @@ const BenevoleToZoneForm : React.FC<Props> = ({benevole, zones, setBenevoleToLin
                             options={zoneOptions}
                             onChange={(selected)=>(setZone(selected))}
                     />
-                    <p id="infoText">{confirmationText}</p>
                     <CreneauSelector setSelectedCreneau={setSelectedCreneau}/>
                 </div>
                 <div id="buttons">
@@ -155,6 +158,7 @@ const BenevoleToZoneForm : React.FC<Props> = ({benevole, zones, setBenevoleToLin
                     </Button>
                 </div>
             </form>
+            <p id="infoText">{confirmationText}</p>
         </StyledForm>
     )
 }

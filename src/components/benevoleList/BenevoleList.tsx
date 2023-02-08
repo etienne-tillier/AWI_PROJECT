@@ -11,6 +11,7 @@ import Zone from '../../interfaces/zone';
 import Select, {SingleValue} from 'react-select'
 import Toggle from "./toggleButton/ToggleButton";
 import CreneauSelector from "../creneauSelector/CreneauSelector"
+import {Button} from "@mui/material";
 
 
 const StyledBenevoleList = styled.div`
@@ -37,6 +38,14 @@ const StyledBenevoleList = styled.div`
   
     #zoneSelect{
       width: 350px;
+    }
+  
+    #removeCreneau{
+      margin-top: 5px;
+      margin-left: 4px;
+    }
+    #removeCreneau>*{
+      margin-right: 10px;
     }
 
 `
@@ -259,7 +268,20 @@ const BenevoleList = () => {
                     }
                     {
                         creneauToRemove!==undefined &&
-                        <div className="removeCreneauButton" onClick={removeCreneau}>Supprimer le créneau</div>
+                        <div id="removeCreneau">
+                            <Button
+                            variant="outlined"
+                            size="small"
+                            color="error"
+                            onClick={() => {removeCreneau()}}
+                            >
+                            Supprimer le créneau
+                            </Button>
+                            <Button
+                                onClick={() => {setCreneauToRemove(undefined)}}>
+                                Annuler
+                            </Button>
+                        </div>
                     }
                 </StyledBenevoleList>
             }

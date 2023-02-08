@@ -25,8 +25,15 @@ const StyledBenevoleItem = styled.div<StyledProps>`
   
         .benevInfo:hover, .creneau:hover{
           cursor: pointer;
-          background-color: #bfcfff;
-          color:#884DFF;
+          opacity: 0.9;
+        }
+  
+        .benevInfo:hover{
+          background-color: ${props => props.selected ? "#bfcfff" : "#4662B7"};
+        }
+  
+        .creneau:hover{
+          background-color: ${props => props.isClicked ? "#bfcfff" : "#4662B7"};
         }
   
         .benevInfo{
