@@ -9,14 +9,15 @@ import JeuForm from '../jeuForm/JeuForm';
 const StyledJeuList = styled.div`
 
     width: 100%;
-
-    .list {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-evenly;
-        width: 100%;
+  
+    #concreteList{
+      padding-top: 7px;
+      padding-bottom: 5px;
+      border-radius: 5px;
+      margin-top: 1%;
+      background-color: #3655b3;
+      color: white;
     }
-
 `
 
 const JeuList = () => {
@@ -24,6 +25,7 @@ const JeuList = () => {
 
     const [isMount, setIsMount] = useState(false)
     const [jeuList, setJeuList] = useState<Jeu[]>([])
+    const [jeuToModif, setJeuToModif]=useState<Jeu | undefined>(undefined)
 
     useEffect(() => {
         axios.get(process.env.REACT_APP_API_URL + "jeux").then((resp) => {
@@ -32,6 +34,9 @@ const JeuList = () => {
         })
     }, [])
 
+    useEffect(()=>{
+    }, [jeuToModif])
+
     const handleAddToArray = (newJeu: Jeu) => {
         setJeuList([...jeuList, newJeu]);
     };
@@ -39,21 +44,17 @@ const JeuList = () => {
     const displayList = () => {
 
         return (
-            <>
-                <div className="list">
-                    <div>Nom</div>
-                    <div>Type</div>
-                </div>
+            <div id="concreteList">
                 {
                     jeuList.map((jeu : Jeu) => (
-                        <JeuItem 
-                            _id={jeu._id}
-                            nom={jeu.nom}
-                            type={jeu.type}
+                        <JeuItem
+                            jeu={jeu}
+                            selectedJeu={jeuToModif}
+                            setJeuToModif={setJeuToModif}
                             />
                     ))
                 }
-            </>
+            </div>
         )
 
     }
@@ -63,7 +64,7 @@ const JeuList = () => {
         <>
             {isMount &&
                 <StyledJeuList>
-                    <JeuForm onAddToArray={handleAddToArray}></JeuForm>
+                    <JeuForm onAddToArray={handleAddToArray} toModif={jeuToModif} setJeuToModif={setJeuToModif}></JeuForm>
                     {displayList()}
                 </StyledJeuList>
             }

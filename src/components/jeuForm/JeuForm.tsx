@@ -4,9 +4,26 @@ import axios from "axios"
 import Select, {SingleValue} from 'react-select'
 import typeJeu from '../../interfaces/typeJeu';
 import Jeu from '../../interfaces/jeu';
+import {Button, TextField} from "@mui/material";
+import TypeJeu from "../../interfaces/typeJeu";
 
 
 const StyledJeuForm = styled.div`
+
+    margin-top: 2%;
+    margin-bottom: 1%;
+    
+    #jeuForm{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 1%;
+      margin-bottom: 5px;
+    }
+  
+    #selectType{
+      width: 250px;
+    }
 
 
 
@@ -20,16 +37,32 @@ interface Option {
 
 interface Props {
     onAddToArray: (newArrayValue: Jeu) => void;
+    toModif: Jeu|undefined;
+    setJeuToModif: (jeu: Jeu|undefined)=>void;
 }
 
-const JeuForm : React.FC<Props> = ({onAddToArray}) => {
+const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif}) => {
 
     const [isMount, setIsMount] = useState(false)
     const [typesJeu, setTypesJeu] = useState([])
     const [typeChoisi, setTypeChoisi] =  useState<Option | null>(null);
     const [confirmationText, setConfirmationText] = useState("")
     const [optionSelectTypeJeu, setOptionSelectTypeJeu] = useState([{}])
+    const [nomJeu, setNomJeu] = useState<String>("")
+    const [typeJeu, setTypeJeu] = useState<TypeJeu|undefined>(undefined)
     const inputRef = useRef<HTMLInputElement>(null);
+
+
+    useEffect(()=>{
+        if(toModif){
+            setNomJeu(toModif.nom);
+            setTypeJeu(toModif.type)
+        }else{
+            setNomJeu("");
+            setTypeJeu(undefined);
+        }
+        setIsMount(true)
+    }, [toModif])
 
     useEffect(() => {
         axios.get(process.env.REACT_APP_API_URL + "typeJeux").then((resp) => {
@@ -53,7 +86,7 @@ const JeuForm : React.FC<Props> = ({onAddToArray}) => {
             axios.post(process.env.REACT_APP_API_URL + "jeux", {
                 nom: nameValue,
                 type: {
-                    _jd : typeChoisi?.value,
+                    _id : typeChoisi?.value,
                     nom : typeChoisi?.label
                 }
             }).then((resp) => {
@@ -62,12 +95,10 @@ const JeuForm : React.FC<Props> = ({onAddToArray}) => {
                     setConfirmationText("Le jeu a bien été crée")
                 }
                 else {
-                    console.log("pbbb")
                     setConfirmationText("Il y a eu une erreur lors de la création du jeu")
                 }
             })
         }
-
     }
 
     const handleChange = (newValue: SingleValue<{}>) => {
@@ -77,17 +108,38 @@ const JeuForm : React.FC<Props> = ({onAddToArray}) => {
 
     return (
         <StyledJeuForm>
-            <form onSubmit={onSubmit}>
-                <label htmlFor="nomJeu">Nom</label>
-                <input ref={inputRef} id="inputNameJeu" name="nomJeu" type="text" required/>
+            <form onSubmit={onSubmit} id="jeuForm">
+                <TextField
+                    id="inputNameJeu"
+                    label="Nom"
+                    value={nomJeu}
+                    required
+                    size="small"
+                    variant="outlined"
+                    inputRef={inputRef}
+                    type="text"
+                />
                 <Select id="selectType"
+                        placeholder="Selectionner un type"
                         required
+                        //value={optionSelectTypeJeu[optionSelectTypeJeu.indexOf({value: toModif?.type._id})]} TODO
                         options={optionSelectTypeJeu}
                         onChange={handleChange}
-                         />
-                <button>Créer</button>
-                <p>{confirmationText}</p>
+                />
+                <Button
+                    variant="contained"
+                    size="small"
+                    type="submit"
+                >{toModif === undefined ? "Créer" : "Modifier"}
+                </Button>
+                { toModif !== undefined &&
+                    <Button
+                        onClick={() => {setJeuToModif(undefined)}}>
+                        Annuler
+                    </Button>
+                }
             </form>
+            <p>{confirmationText}</p>
         </StyledJeuForm>
     );
 };

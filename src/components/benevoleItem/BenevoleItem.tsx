@@ -119,7 +119,7 @@ const BenevoleItem : React.FC<Props> = ({benevole, zone, heureDebut, heureFin, s
         <StyledBenevoleItem isClicked={clicked} selected={selected}>
             <div className="benevole">
                 <div className="benevInfo" onClick={() => {setBenevoleToModif(benevole)}}>
-                    <div className="name">{benevole.nom} {benevole.prenom}</div>
+                    <div className="name">{benevole.nom.toUpperCase()} {benevole.prenom.charAt(0).toUpperCase()+benevole.prenom.slice(1, benevole.prenom.length)}</div>
                     <div>-</div>
                     <div>{benevole.email}</div>
                 </div>
