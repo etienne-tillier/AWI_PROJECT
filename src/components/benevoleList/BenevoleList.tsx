@@ -230,6 +230,49 @@ const BenevoleList = () => {
         )
     }
 
+    const getBenevoleByCreneauInList = () => {
+        let creneauList : Creneau[] = []
+        for (let zone of zones!){
+            for (let creneau of zone.benevoles){
+                console.log(new Date(creneau.heureDebut).getTime())
+                console.log(selectedFilterCreneau)
+                if ((new Date(creneau.heureDebut).getTime() >= selectedFilterCreneau.debut && new Date(creneau.heureDebut).getTime() < selectedFilterCreneau.fin) 
+                    || (new Date(creneau.heureFin).getTime() >  selectedFilterCreneau.debut && new Date(creneau.heureFin).getTime() <= selectedFilterCreneau.fin)){
+                        creneauList.push({
+                            benevole : creneau.benevole,
+                            debut : creneau.heureDebut,
+                            fin : creneau.heureFin,
+                            zone : zone
+                        })
+                    }
+            }
+        }
+        console.log(creneauList)
+        return creneauList
+    }
+
+    const displayListByCreneau = () => {
+        return (
+            <>
+                <div className="concreteList">
+                    {getBenevoleByCreneauInList().map((creneau : Creneau) => (
+                        <BenevoleItem
+                            benevole={creneau.benevole}
+                            zone={creneau.zone}
+                            heureDebut={new Date(creneau.debut)}
+                            heureFin={new Date(creneau.fin)}
+                            setBenevoleToModif={setBenevoleToModif}
+                            setBenevoleToLink={setBenevoleToLink}
+                            setCreneauToRemove={setCreneauToRemove}
+                            selected={(creneau.benevole._id === benevoleToModif?._id ? true : false)}
+                            creneau={creneauToRemove}
+                        />
+                    ))}
+                </div>
+            </>
+        )
+    }
+
 
     return (
         <>
@@ -243,9 +286,7 @@ const BenevoleList = () => {
                         { toggled ?
                             <div>
                                 <CreneauSelector setSelectedCreneau={setSelectedFilterCreneau}/>
-                                <p>Date debut : {new Date(selectedFilterCreneau.debut).toString()}</p>
-                                <p>Date fin : {new Date(selectedFilterCreneau.fin).toString()}</p>
-                                //TODO : mettre fct qui affiche la liste des creneaux
+                                {displayListByCreneau()}
                             </div>
                             :
                             <div>
