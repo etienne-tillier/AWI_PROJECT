@@ -43,15 +43,14 @@ const JeuFormZone : React.FC<Props> = ({jeu}) => {
                     value: zone,
                     label: zone.nom
                 })
-                console.log(jeu)
-                console.log(zone)
-                if (zone.jeux.includes(jeu)){
-                    console.log("yessss")
-                    zonesJeu.push(zone)
-                    zonesOptionSelected!.push({
-                        value: zone,
-                        label: zone.name
-                    })
+                for (let jeuZone of zone.jeux){
+                    if (jeuZone._id == jeu._id){
+                        zonesJeu.push(zone)
+                        zonesOptionSelected!.push({
+                            value: zone,
+                            label: zone.nom
+                        })
+                    }
                 }
             }
             setSelectedZones(zonesOptionSelected)
@@ -59,7 +58,7 @@ const JeuFormZone : React.FC<Props> = ({jeu}) => {
             setJeuZones(zonesJeu)
             setIsMount(true)
         })
-    }, [])
+    }, [jeu])
 
     const getZoneToAdd = () => {
         let addList : Zone[] = []
@@ -113,7 +112,7 @@ const JeuFormZone : React.FC<Props> = ({jeu}) => {
         for (let zone of getZoneToDel()){
             axios.patch(process.env.REACT_APP_API_URL + "zones/removeJeuFrom/" + zone._id,
             {
-                jeu: jeu
+                id: jeu._id
             }
             )
             .then((resp) => {
