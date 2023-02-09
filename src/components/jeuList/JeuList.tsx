@@ -4,6 +4,7 @@ import axios from "axios"
 import styled from 'styled-components';
 import JeuItem from '../jeuItem/JeuItem';
 import JeuForm from '../jeuForm/JeuForm';
+import JeuFormZone from '../jeuFormZone/JeuFormZone';
 
 
 const StyledJeuList = styled.div`
@@ -77,6 +78,11 @@ const JeuList = () => {
                 <StyledJeuList>
                     <JeuForm onAddToArray={handleAddToArray} toModif={jeuToModif} setJeuToModif={setJeuToModif}></JeuForm>
                     {displayList()}
+                    {jeuToModif && 
+                        <JeuFormZone
+                            jeu={jeuToModif}
+                        />
+                    }
                 </StyledJeuList>
             }
         </>
