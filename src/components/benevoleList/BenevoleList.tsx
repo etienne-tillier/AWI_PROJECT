@@ -234,8 +234,6 @@ const BenevoleList = () => {
         let creneauList : Creneau[] = []
         for (let zone of zones!){
             for (let creneau of zone.benevoles){
-                console.log(new Date(creneau.heureDebut).getTime())
-                console.log(selectedFilterCreneau)
                 if ((new Date(creneau.heureDebut).getTime() >= selectedFilterCreneau.debut && new Date(creneau.heureDebut).getTime() < selectedFilterCreneau.fin) 
                     || (new Date(creneau.heureFin).getTime() >  selectedFilterCreneau.debut && new Date(creneau.heureFin).getTime() <= selectedFilterCreneau.fin)){
                         creneauList.push({
@@ -247,7 +245,6 @@ const BenevoleList = () => {
                     }
             }
         }
-        console.log(creneauList)
         return creneauList
     }
 

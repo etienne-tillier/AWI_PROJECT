@@ -39,6 +39,7 @@ const StyledHome = styled.div<StyledHomeProps>`
             width: 100%;
             text-align: center;
             font-weight: bold;
+            transition: 0.2s;
 
             :hover{
                 cursor: pointer;
@@ -51,6 +52,7 @@ const StyledHome = styled.div<StyledHomeProps>`
             width: 100%;
             text-align: center;
             font-weight: bold;
+            transition: 0.2s;
 
             :hover{
                 cursor: pointer;

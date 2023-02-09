@@ -28,8 +28,19 @@ const JeuList = () => {
     const [jeuToModif, setJeuToModif]=useState<Jeu | undefined>(undefined)
 
     useEffect(() => {
+        let jeuList : Jeu[] = []
         axios.get(process.env.REACT_APP_API_URL + "jeux").then((resp) => {
-            setJeuList(resp.data)
+            for (let jeu of resp.data){
+                jeuList.push({
+                    _id: jeu._id,
+                    nom: jeu.nom,
+                    type: {
+                        _id: jeu.type._id,
+                        nom: jeu.type.nom
+                    }
+                })
+            }
+            setJeuList(jeuList)
             setIsMount(true)
         })
     }, [])

@@ -31,7 +31,7 @@ const StyledJeuForm = styled.div`
 
 
 interface Option {
-    value: String;
+    value: TypeJeu;
     label: String;
   }
 
@@ -47,7 +47,7 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif}) => {
     const [typesJeu, setTypesJeu] = useState([])
     const [typeChoisi, setTypeChoisi] =  useState<Option | null>(null);
     const [confirmationText, setConfirmationText] = useState("")
-    const [optionSelectTypeJeu, setOptionSelectTypeJeu] = useState([{}])
+    const [optionSelectTypeJeu, setOptionSelectTypeJeu] = useState<Option[]>([])
     const [nomJeu, setNomJeu] = useState<String>("")
     const [typeJeu, setTypeJeu] = useState<TypeJeu|undefined>(undefined)
     const inputRef = useRef<HTMLInputElement>(null);
@@ -57,9 +57,14 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif}) => {
         if(toModif){
             setNomJeu(toModif.nom);
             setTypeJeu(toModif.type)
+            setTypeChoisi({
+                value: toModif.type,
+                label: toModif.type.nom
+            })
         }else{
             setNomJeu("");
             setTypeJeu(undefined);
+
         }
         setIsMount(true)
     }, [toModif])
@@ -79,10 +84,9 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif}) => {
         })
       }, [])
 
-    const onSubmit = (e : any) => {
-        e.preventDefault()
-        if (inputRef && inputRef.current) {
-            const nameValue : String = inputRef.current.value;
+      
+    const createJeu = () => {
+        const nameValue : String = inputRef.current!.value;
             axios.post(process.env.REACT_APP_API_URL + "jeux", {
                 nom: nameValue,
                 type: {
@@ -98,8 +102,37 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif}) => {
                     setConfirmationText("Il y a eu une erreur lors de la création du jeu")
                 }
             })
+    }
+
+    const modifyJeu = () => {
+        const nameValue : String = inputRef.current!.value;
+        axios.patch(process.env.REACT_APP_API_URL + "jeux/" + toModif?._id, {
+            nom: nameValue,
+            type: {
+                _id : typeChoisi?.value,
+                nom : typeChoisi?.label
+            }
+        }).then((resp) => {
+            if (resp.status === 200){
+                onAddToArray(resp.data)
+                setConfirmationText("Le jeu a bien été modifié")
+            }
+            else {
+                setConfirmationText("Il y a eu une erreur lors de la modification du jeu")
+            }
+        })
+    }
+
+    const onSubmit = (e : any) => {
+        e.preventDefault()
+        if (toModif){
+            createJeu()
+        }
+        else {
+            modifyJeu()
         }
     }
+
 
     const handleChange = (newValue: SingleValue<{}>) => {
         setTypeChoisi(newValue as Option | null);
@@ -122,6 +155,7 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif}) => {
                 <Select id="selectType"
                         placeholder="Selectionner un type"
                         required
+                        value={typeChoisi}
                         //value={optionSelectTypeJeu[optionSelectTypeJeu.indexOf({value: toModif?.type._id})]} TODO
                         options={optionSelectTypeJeu}
                         onChange={handleChange}
