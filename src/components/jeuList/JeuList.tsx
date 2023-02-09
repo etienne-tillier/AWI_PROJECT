@@ -5,7 +5,10 @@ import styled from 'styled-components';
 import JeuItem from '../jeuItem/JeuItem';
 import JeuForm from '../jeuForm/JeuForm';
 import JeuFormZone from '../jeuFormZone/JeuFormZone';
-
+import Select from "react-select";
+import ListBy from "./listBy/ListBy";
+import TypeJeu from "../../interfaces/typeJeu";
+import Zone from "../../interfaces/zone";
 
 const StyledJeuList = styled.div`
 
@@ -21,15 +24,28 @@ const StyledJeuList = styled.div`
     }
 `
 
+interface Filter{
+    label: String,
+    value: String
+}
+
 const JeuList = () => {
 
+    const possibleFilters : Filter[] = [{label: "Nom", value:"nom"}, {label: "Type", value:"type"}, {label: "Zone", value:"zone"}]
 
+    const [types, setTypes] = useState<TypeJeu[]>([])
+    const [filter, setFilter] = useState<Filter>(possibleFilters[0])
+    const [jeuToAdd, setJeuToAdd] = useState<Jeu | undefined>(undefined)
     const [isMount, setIsMount] = useState(false)
     const [jeuList, setJeuList] = useState<Jeu[]>([])
     const [jeuToModif, setJeuToModif]=useState<Jeu | undefined>(undefined)
+    const [zones, setZones] = useState<Zone[]>([]);
 
     useEffect(() => {
-        let jeuList : Jeu[] = []
+        getZones()
+        if(types.length<1) {
+            fillTypes()
+        }
         axios.get(process.env.REACT_APP_API_URL + "jeux").then((resp) => {
             for (let jeu of resp.data){
                 jeuList.push({
@@ -41,13 +57,36 @@ const JeuList = () => {
                     }
                 })
             }
-            setJeuList(jeuList)
             setIsMount(true)
         })
     }, [])
 
-    useEffect(()=>{
-    }, [jeuToModif])
+    /**
+     * Fetching types
+     */
+    const fillTypes = ()=>{
+        axios.get(process.env.REACT_APP_API_URL + "typeJeux").then((resp) => {
+            let aux: TypeJeu[] = []
+            for (let type of resp.data) {
+                aux.push(type)
+            }
+            setTypes(aux)
+        })
+    }
+
+    /**
+     * Fetching every zones
+     */
+    const getZones = () => {
+        axios.get(process.env.REACT_APP_API_URL + "zones").then((resp)=>{
+            let aux : Zone[] = [];
+            setZones([])
+            for(let zone of resp.data){
+                aux.push(zone)
+            }
+            setZones(aux)
+        })
+    }
 
     const handleAddToArray = (newJeu: Jeu) => {
         setJeuList([...jeuList, newJeu]);
@@ -63,6 +102,7 @@ const JeuList = () => {
                             jeu={jeu}
                             selectedJeu={jeuToModif}
                             setJeuToModif={setJeuToModif}
+                            setJeuToAdd={setJeuToAdd}
                             />
                     ))
                 }
@@ -77,10 +117,24 @@ const JeuList = () => {
             {isMount &&
                 <StyledJeuList>
                     <JeuForm onAddToArray={handleAddToArray} toModif={jeuToModif} setJeuToModif={setJeuToModif}></JeuForm>
-                    {displayList()}
-                    {jeuToModif && 
+                    <Select
+                        placeholder="Filtrer par..."
+                        options={possibleFilters}
+                        onChange={(selected)=>setFilter(selected as Filter)}
+                    />
+
+                    {filter.value==="nom" ?
+                        displayList()
+                        :
+                        filter.value==="type" ?
+                            <ListBy filterType={types} filterZone={null} jeux={jeuList} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd}/>
+                            :
+                            <ListBy filterType={null} filterZone={zones} jeux={jeuList} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd}/>
+                    }
+
+                    {jeuToAdd &&
                         <JeuFormZone
-                            jeu={jeuToModif}
+                            jeu={jeuToAdd}
                         />
                     }
                 </StyledJeuList>

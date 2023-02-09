@@ -66,11 +66,11 @@ const StyledJeuItem = styled.div<StyledProps>`
 interface Props{
     jeu: Jeu;
     selectedJeu : Jeu | undefined;
-
+    setJeuToAdd: (jeuToAdd : Jeu | undefined)=> void;
     setJeuToModif : (jeuToModif : Jeu|undefined) => void;
 }
 
-const JeuItem : React.FC<Props> = ({jeu, selectedJeu, setJeuToModif}) => {
+const JeuItem : React.FC<Props> = ({jeu, selectedJeu, setJeuToModif, setJeuToAdd}) => {
 
 
     return (
@@ -79,7 +79,7 @@ const JeuItem : React.FC<Props> = ({jeu, selectedJeu, setJeuToModif}) => {
                 <div className="jeuName">{jeu.nom.charAt(0).toUpperCase() + jeu.nom.slice(1, jeu.nom.length)}</div>
                 <div>{jeu.type.nom}</div>
             </div>
-            <div id="addToZoneButton"><p>+</p></div>
+            <div id="addToZoneButton" onClick={()=>setJeuToAdd(jeu)}><p>+</p></div>
         </StyledJeuItem>
     );
 };

@@ -50,7 +50,6 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif}) => {
     const [optionSelectTypeJeu, setOptionSelectTypeJeu] = useState<Option[]>([])
     const [nomJeu, setNomJeu] = useState<String>("")
     const [typeJeu, setTypeJeu] = useState<TypeJeu|undefined>(undefined)
-    const inputRef = useRef<HTMLInputElement>(null);
 
 
     useEffect(()=>{
@@ -79,6 +78,15 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif}) => {
                     label: type.nom
                 })
             }
+            options.sort((a,b)=>{
+                if(a.label<b.label){
+                    return -1
+                } else if(a.label>b.label){
+                    return 1
+                } else{
+                    return 0
+                }
+            })
             setOptionSelectTypeJeu(options)
             setIsMount(true)
         })
@@ -86,8 +94,9 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif}) => {
 
       
     const createJeu = () => {
-        const nameValue : String = inputRef.current!.value;
+        const nameValue : String = nomJeu;
             axios.post(process.env.REACT_APP_API_URL + "jeux", {
+
                 nom: nameValue,
                 type: {
                     _id : typeChoisi?.value,
@@ -105,7 +114,7 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif}) => {
     }
 
     const modifyJeu = () => {
-        const nameValue : String = inputRef.current!.value;
+        const nameValue : String = nomJeu;
         axios.patch(process.env.REACT_APP_API_URL + "jeux/" + toModif?._id, {
             nom: nameValue,
             type: {
@@ -114,7 +123,7 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif}) => {
             }
         }).then((resp) => {
             if (resp.status === 200){
-                onAddToArray(resp.data)
+                //TODO update array
                 setConfirmationText("Le jeu a bien été modifié")
             }
             else {
@@ -126,10 +135,10 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif}) => {
     const onSubmit = (e : any) => {
         e.preventDefault()
         if (toModif){
-            createJeu()
+            modifyJeu()
         }
         else {
-            modifyJeu()
+            createJeu()
         }
     }
 
@@ -146,10 +155,10 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif}) => {
                     id="inputNameJeu"
                     label="Nom"
                     value={nomJeu}
+                    onChange={e=>setNomJeu(e.target.value)}
                     required
                     size="small"
                     variant="outlined"
-                    inputRef={inputRef}
                     type="text"
                 />
                 <Select id="selectType"
@@ -168,7 +177,7 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif}) => {
                 </Button>
                 { toModif !== undefined &&
                     <Button
-                        onClick={() => {setJeuToModif(undefined)}}>
+                        onClick={() => {setJeuToModif(undefined); setTypeChoisi(null)}}>
                         Annuler
                     </Button>
                 }
