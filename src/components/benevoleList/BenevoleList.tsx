@@ -88,6 +88,14 @@ const BenevoleList = () => {
         }
         }, [benevoles])
 
+        useEffect(() => {
+            for (let zone of optionsSelectZones){
+                if (zone.value?._id === selectedZone.value?._id){
+                    setSelectedZone(zone)
+                }
+            }
+          }, [optionsSelectZones])
+
     useEffect(()=>{
         setCreneauToRemove(undefined)
         setBenevoleToLink(undefined)
@@ -96,23 +104,23 @@ const BenevoleList = () => {
     }, [toggled])
 
     const fetchZones = () => {
-        let options : Option[] = []
-        options.push(
-            {
-                value: null,
-                label: "Tous les Bénévoles"
-            }
-        )
-        axios.get(process.env.REACT_APP_API_URL + "zones").then((resp) => {
-            setZones(resp.data)
-            for (let zone of resp.data) {
-                options.push({
-                    value: zone,
-                    label: zone.nom
-                })
-            }
-            setOptionsSelectZone(options)
-        })
+            let options : Option[] = []
+            options.push(
+                {
+                    value: null,
+                    label: "Tous les Bénévoles"
+                }
+            )
+            axios.get(process.env.REACT_APP_API_URL + "zones").then((resp) => {
+                setZones(resp.data)
+                for (let zone of resp.data) {
+                    options.push({
+                        value: zone,
+                        label: zone.nom
+                    })
+                }
+                setOptionsSelectZone(options)
+            })
     }
 
     const updateBenevole = (benevoles: Benevole[], updatedBenevole: Benevole) => {
@@ -121,6 +129,7 @@ const BenevoleList = () => {
         if (index !== -1) {
             newBenevoles[index] = updatedBenevole;
         }
+        console.log(newBenevoles[index])
         return newBenevoles;
     };
 
