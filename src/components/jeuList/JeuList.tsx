@@ -22,6 +22,7 @@ const StyledJeuList = styled.div`
       background-color: #3655b3;
       color: white;
     }
+
 `
 
 interface Filter{
@@ -46,20 +47,22 @@ const JeuList = () => {
         if(types.length<1) {
             fillTypes()
         }
-        axios.get(process.env.REACT_APP_API_URL + "jeux").then((resp) => {
-            for (let jeu of resp.data){
-                jeuList.push({
-                    _id: jeu._id,
-                    nom: jeu.nom,
-                    type: {
-                        _id: jeu.type._id,
-                        nom: jeu.type.nom
-                    }
-                })
-            }
-            setIsMount(true)
-        })
+            let listeJeu : Jeu[] = []
+            axios.get(process.env.REACT_APP_API_URL + "jeux").then((resp) => {
+                for (let jeu of resp.data){
+                    listeJeu.push(jeu)
+                }
+                setJeuList(sortByName(listeJeu))
+                setIsMount(true)
+            })
     }, [])
+
+    useEffect(() => { 
+        if (filter.value === "nom" && isMount){
+            console.log(filter.value)
+            setJeuList(sortByName(jeuList))
+        }
+     }, [filter])
 
     /**
      * Fetching types
@@ -92,8 +95,18 @@ const JeuList = () => {
         setJeuList([...jeuList, newJeu]);
     };
 
-    const displayList = () => {
+    const sortByName = (liste : Jeu[]) => {
+        let listeJeu : Jeu[] = []
+        listeJeu = listeJeu.concat(liste)
+        listeJeu = listeJeu.sort((a : Jeu, b : Jeu) => {
+            if (a.nom.toUpperCase() < b.nom.toUpperCase()) return -1;
+            if (a.nom.toUpperCase() > b.nom.toUpperCase()) return 1;
+            return 0;
+        })
+        return listeJeu
+    }
 
+    const displayList = () => {
         return (
             <div id="concreteList">
                 {
