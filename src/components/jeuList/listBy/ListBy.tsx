@@ -6,7 +6,45 @@ import TypeJeu from "../../../interfaces/typeJeu";
 import Zone from "../../../interfaces/zone";
 
 const StyledJeuList = styled.div`
-
+  .concreteList{
+    padding-top: 7px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+    margin-top: 1%;
+    background-color: #3655b3;
+    color: white;
+  }
+  
+  .title{
+    display: inline-block;
+    font-size: 1.5em;
+    font-weight: bold;
+    background-color: white;
+    border-radius: 3px;
+    padding: 3px;
+  }
+  
+  .zoneTitle{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width:25%;
+  }
+  
+  .zoneTitle, .titleJeu{
+    margin-top: 20px;
+    margin-left: 2%;
+  }
+  
+  .addJeuButton{
+    font-weight: bold;
+    font-size: 26px;
+    text-align: center;
+  }
+  .addJeuButton:hover{
+    cursor: pointer;
+    opacity: 0.8;
+  }
 `
 
 interface Props{
@@ -39,32 +77,35 @@ const ListBy : React.FC<Props> = ({filterType, filterZone, jeux, setJeuToModif, 
         if(filterType!==null){
             sortByType();
             return (
-                <div>
+                <div className="concreteList">
                     {
                         jeux.map((jeu: Jeu)=>(
-                            <>
+                            <div className="subList">
                                 { (jeux.indexOf(jeu)===0 || jeu.type.nom !== jeux[jeux.indexOf(jeu)-1].type.nom) &&
-                                    <div className="typeTitle">{jeu.type.nom}</div>
+                                    <div className="title titleJeu">{jeu.type.nom}</div>
                                 }
                                 <JeuItem jeu={jeu} selectedJeu={undefined} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd}/>
-                            </>
+                            </div>
                         ))
                     }
                 </div>
             )
         }else if (filterZone!==null){
             return (
-                <div>
+                <div className="concreteList">
                     {
                         filterZone.map((zone: Zone)=>(
-                            <>
-                                <div className="zoneTitle">{zone.nom}</div>
+                            <div className="subList">
+                                <div className="zoneTitle">
+                                    <div className="title">{zone.nom}</div>
+                                    <div className="addJeuButton">+</div>
+                                </div>
                                 {
                                     zone.jeux.map((jeu: Jeu)=>(
                                         <JeuItem jeu={jeu} selectedJeu={undefined} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd}/>
                                     ))
                                 }
-                            </>
+                            </div>
                         ))
                     }
                 </div>

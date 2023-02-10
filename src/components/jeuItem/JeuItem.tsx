@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Jeu from '../../interfaces/jeu';
+import editLogo from "./../../images/edit_logo.svg";
 
 
 interface StyledProps {
@@ -52,11 +53,11 @@ const StyledJeuItem = styled.div<StyledProps>`
           text-align: center;
         }
 
-        #addToZoneButton>p{
-          width: 20px;
+        #addToZoneButton>img{
+          height: 26px;
+          filter: invert(100%) sepia(0%) saturate(2594%) hue-rotate(181deg) brightness(107%) contrast(90%);;
         }
-  
-        #addToZoneButton>p:hover{
+        #addToZoneButton>img:hover{
           cursor: pointer;
           opacity: 0.8;
         }
@@ -79,7 +80,7 @@ const JeuItem : React.FC<Props> = ({jeu, selectedJeu, setJeuToModif, setJeuToAdd
                 <div className="jeuName">{jeu.nom.charAt(0).toUpperCase() + jeu.nom.slice(1, jeu.nom.length)}</div>
                 <div>{jeu.type.nom}</div>
             </div>
-            <div id="addToZoneButton" onClick={()=>setJeuToAdd(jeu)}><p>+</p></div>
+            <div id="addToZoneButton" onClick={()=>setJeuToAdd(jeu)}><img src={editLogo} alt="Edit Button"/></div>
         </StyledJeuItem>
     );
 };
