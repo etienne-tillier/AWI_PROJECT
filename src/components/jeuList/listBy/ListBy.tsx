@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import JeuItem from '../../jeuItem/JeuItem';
 import TypeJeu from "../../../interfaces/typeJeu";
 import Zone from "../../../interfaces/zone";
+import ZoneFormJeu from "../../zoneFormJeu/ZoneFormJeu";
 
 const StyledJeuList = styled.div`
   .concreteList{
@@ -13,6 +14,16 @@ const StyledJeuList = styled.div`
     margin-top: 1%;
     background-color: #3655b3;
     color: white;
+    max-height: 62vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .concreteList::-webkit-scrollbar {
+    display: none;
   }
   
   .title{
@@ -52,11 +63,14 @@ interface Props{
     filterType : TypeJeu[] | null
     filterZone : Zone[] | null
     jeux : Jeu[]
+    selectedJeu : Jeu|undefined
     setJeuToModif: (jeu: Jeu|undefined)=>void;
     setJeuToAdd: (jeu: Jeu|undefined)=>void;
 }
 
-const ListBy : React.FC<Props> = ({filterType, filterZone, jeux, setJeuToModif, setJeuToAdd}) => {
+const ListBy : React.FC<Props> = ({filterType, filterZone, jeux, selectedJeu, setJeuToModif, setJeuToAdd}) => {
+
+    const [selectedZone, setSelectedZone] = useState<Zone|undefined>(undefined)
 
     const sortByType = ()=>{
         jeux.sort((a,b)=> {
@@ -84,7 +98,7 @@ const ListBy : React.FC<Props> = ({filterType, filterZone, jeux, setJeuToModif, 
                                 { (jeux.indexOf(jeu)===0 || jeu.type.nom !== jeux[jeux.indexOf(jeu)-1].type.nom) &&
                                     <div className="title titleJeu">{jeu.type.nom}</div>
                                 }
-                                <JeuItem jeu={jeu} selectedJeu={undefined} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd}/>
+                                <JeuItem jeu={jeu} selectedJeu={selectedJeu} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd}/>
                             </div>
                         ))
                     }
@@ -98,11 +112,11 @@ const ListBy : React.FC<Props> = ({filterType, filterZone, jeux, setJeuToModif, 
                             <div className="subList">
                                 <div className="zoneTitle">
                                     <div className="title">{zone.nom}</div>
-                                    <div className="addJeuButton">+</div>
+                                    <div className="addJeuButton" onClick={()=>(setSelectedZone(zone), setJeuToAdd(undefined))}>+</div>
                                 </div>
                                 {
                                     zone.jeux.map((jeu: Jeu)=>(
-                                        <JeuItem jeu={jeu} selectedJeu={undefined} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd}/>
+                                        <JeuItem jeu={jeu} selectedJeu={selectedJeu} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd}/>
                                     ))
                                 }
                             </div>
@@ -118,6 +132,9 @@ const ListBy : React.FC<Props> = ({filterType, filterZone, jeux, setJeuToModif, 
     return (
         <StyledJeuList>
             {displayFilteredJeu()}
+            {selectedZone &&
+                <ZoneFormJeu jeux={jeux} selectedZone={selectedZone} setSelectedZone={setSelectedZone}/>
+            }
         </StyledJeuList>
     )
 }

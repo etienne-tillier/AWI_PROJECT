@@ -27,8 +27,9 @@ const StyledJeuItem = styled.div<StyledProps>`
           height: 50px;
           margin-right: 2%;
           padding-left: 2%;
-          //border-bottom: solid 1px;
-          //border-bottom-color: grey;
+          border-radius: 3px;
+          background-color: ${props => props.selected ? "#bfcfff" : "#3655b3"};
+          color: ${props => props.selected ? "#884DFF" : "white"};
         }
   
         .jeuInfo:hover{

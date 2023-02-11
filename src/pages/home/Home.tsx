@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import BenevoleList from '../../components/benevoleList/BenevoleList';
 import JeuList from '../../components/jeuList/JeuList';
 
+import Logo from "../../images/logo.png"
+
 
 
 interface StyledHomeProps {
@@ -13,6 +15,7 @@ const StyledHome = styled.div<StyledHomeProps>`
   
     height: 100%;
     width: 60%;
+    margin-top: 2px;
     margin-left: 20%;
     margin-right: 20%;
 
@@ -33,6 +36,7 @@ const StyledHome = styled.div<StyledHomeProps>`
         border: solid 1px black;
         display: flex;
         flex-direction: row;
+        margin-bottom: 10px;
 
         .benevoleButton{
             background-color: ${props => props.isJeuProps ? "white" : "#884DFF"};
@@ -63,6 +67,13 @@ const StyledHome = styled.div<StyledHomeProps>`
     .title{
         color: #4d4dff;
     }
+  
+  #header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
 
 `
 
@@ -84,10 +95,13 @@ const Home = () => {
 
     return (
         <StyledHome isJeuProps={isJeu}>
-            <h1 className='title'>HOME</h1>
-            <div className="menu">
-                <div className="benevoleButton" onClick={handleBenevoleButton}>Bénevoles</div>
-                <div className="jeuButton" onClick={handleJeuButton}>Jeux</div>
+            <div id="header">
+                <img src={Logo} height="65
+                px"/>
+                <div className="menu">
+                    <div className="benevoleButton" onClick={handleBenevoleButton}>Bénevoles</div>
+                    <div className="jeuButton" onClick={handleJeuButton}>Jeux</div>
+                </div>
             </div>
             <div className="list">
                 {isJeu ? 

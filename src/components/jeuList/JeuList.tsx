@@ -21,6 +21,27 @@ const StyledJeuList = styled.div`
       margin-top: 1%;
       background-color: #3655b3;
       color: white;
+      max-height: 62vh;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    #concreteList::-webkit-scrollbar {
+      display: none;
+    }
+  
+    #filterSelect{
+      width: 300px;
+    }
+  
+    #selection{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 1%;
     }
 
 `
@@ -63,6 +84,12 @@ const JeuList = () => {
             setJeuList(sortByName(jeuList))
         }
      }, [filter])
+
+    useEffect(()=>{
+        if(jeuToAdd===undefined){
+            getZones()
+        }
+    }, [jeuToAdd])
 
     /**
      * Fetching types
@@ -130,24 +157,29 @@ const JeuList = () => {
             {isMount &&
                 <StyledJeuList>
                     <JeuForm onAddToArray={handleAddToArray} toModif={jeuToModif} setJeuToModif={setJeuToModif}></JeuForm>
-                    <Select
-                        placeholder="Filtrer par..."
-                        options={possibleFilters}
-                        onChange={(selected)=>setFilter(selected as Filter)}
-                    />
+                    <div id="selection">
+                        <p>Trier par : </p>
+                        <Select
+                            id="filterSelect"
+                            placeholder="Filtrer par..."
+                            options={possibleFilters}
+                            onChange={(selected)=>setFilter(selected as Filter)}
+                        />
+                    </div>
 
                     {filter.value==="nom" ?
                         displayList()
                         :
                         filter.value==="type" ?
-                            <ListBy filterType={types} filterZone={null} jeux={jeuList} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd}/>
+                            <ListBy filterType={types} filterZone={null} jeux={jeuList} selectedJeu={jeuToModif} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd}/>
                             :
-                            <ListBy filterType={null} filterZone={zones} jeux={jeuList} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd}/>
+                            <ListBy filterType={null} filterZone={zones} jeux={jeuList} selectedJeu={jeuToModif} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd}/>
                     }
 
                     {jeuToAdd &&
                         <JeuFormZone
                             jeu={jeuToAdd}
+                            setJeuToAdd={setJeuToAdd}
                         />
                     }
                 </StyledJeuList>

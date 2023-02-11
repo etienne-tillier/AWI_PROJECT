@@ -5,15 +5,48 @@ import Zone from '../../interfaces/zone';
 import styled from 'styled-components';
 import axios from 'axios';
 import { Button } from '@mui/material';
-import MultiValue from 'react-select/lib/components/MultiValue';
 
 
 const StyledJeuFormZone = styled.div`
+
+    padding: 1%;
+    border-radius: 5px;
+    width: 600px;
+    margin-top: 1%;
+    margin-left: 1%;
+    border: solid 1px lightgray;
+  
+
+    #infoText{
+      font-family: "Roboto","Helvetica","Arial",sans-serif;
+      font-weight: 500;
+      font-size: 1rem;
+      margin-left: 3px;
+    }
+  
+    form>*, #infoText{
+      margin-bottom: 1%;
+    }
+  
+    #buttons{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-right: 1%;
+      margin-left: 3px;
+      align-items: center;
+    }
     
+    #zoneSelect{
+      width: 600px;
+    }
+  
+    #errMsg{
+      color: red;
+      font-size: 14px;
+    }
 
 `
-
-
 interface Option {
     value: Zone,
     label: String
@@ -21,10 +54,11 @@ interface Option {
 
 interface Props {
     jeu : Jeu,
+    setJeuToAdd : (jeu : Jeu|undefined) => void
 
 }
 
-const JeuFormZone : React.FC<Props> = ({jeu}) => {
+const JeuFormZone : React.FC<Props> = ({jeu, setJeuToAdd}) => {
 
 
     const [zones, setZones] = useState<Option[]>([])
@@ -60,6 +94,9 @@ const JeuFormZone : React.FC<Props> = ({jeu}) => {
         })
     }, [jeu])
 
+    /**
+     * Get and return every new selected zones to associate with the current Jeu
+     */
     const getZoneToAdd = () => {
         let addList : Zone[] = []
         for (let zoneSelect of selectedZones!){
@@ -76,6 +113,9 @@ const JeuFormZone : React.FC<Props> = ({jeu}) => {
         return addList
     }
 
+    /**
+     * Get and return every selected zone to unlink from the current Jeu
+     */
     const getZoneToDel = () => {
         let delList : Zone[] = []
         for (let zoneJeu of jeuZones!){
@@ -92,39 +132,53 @@ const JeuFormZone : React.FC<Props> = ({jeu}) => {
         return delList
     }
 
-    const onSubmit = (e : any) => {
+    /**
+     * Called when form is submitted
+     * Associate new zones to the Jeu and remove the necessary ones
+     * of the associated zone
+     * @param e
+     */
+    const onSubmit = async (e : any) => {
         e.preventDefault()
-        for (let zone of getZoneToAdd()){
-            axios.patch(process.env.REACT_APP_API_URL + "zones/addJeuTo/" + zone._id,
-            {
-                jeu: jeu
-            }
-            )
-            .then((resp) => {
-                if (resp.status == 200){
-                    setConfirmationText("Le jeu a bien été ajouté !")
-                }
-                else {
-                    setConfirmationText("Il y a eu un problème lors de l'ajout du jeu")
-                }
-            })
-        }
-        for (let zone of getZoneToDel()){
-            axios.patch(process.env.REACT_APP_API_URL + "zones/removeJeuFrom/" + zone._id,
-            {
-                id: jeu._id
-            }
-            )
-            .then((resp) => {
-                if (resp.status == 200){
-                    setConfirmationText("Le jeu a bien été ajouté !")
-                }
-                else {
-                    setConfirmationText("Il y a eu un problème lors de l'ajout du jeu")
-                }
-            })
-        }
+        await add()
+        await remove()
+        setJeuToAdd(undefined)
+    }
 
+    /**
+     * Pushing every new associated game in the zone
+     */
+    const add = async () => {
+        const zoneToAdd : Zone[] = getZoneToAdd();
+        for await (let zone of zoneToAdd) {
+            try {
+                await axios.patch(process.env.REACT_APP_API_URL + "zones/addJeuTo/" + zone._id,
+                    {
+                        jeu: jeu._id
+                    }
+                )
+            }catch (err){
+                setConfirmationText(err as string)
+            }
+        }
+    }
+
+    /**
+     * Removing every old associated game of the zone
+     */
+    const remove = async () => {
+        const zoneToRemove : Zone[] = getZoneToDel();
+        for await (let zone of zoneToRemove) {
+            try {
+                await axios.patch(process.env.REACT_APP_API_URL + "zones/removeJeuFrom/" + zone._id,
+                    {
+                        id: jeu._id
+                    }
+                )
+            }catch (err){
+                setConfirmationText(err as string)
+            }
+        }
     }
 
 
@@ -132,9 +186,10 @@ const JeuFormZone : React.FC<Props> = ({jeu}) => {
         <StyledJeuFormZone>
             {isMount && 
                 <>
-                    <p>Ajouter le jeu {jeu.nom}</p>
+                    <p id="infoText">Affecter le jeu {jeu.nom}</p>
                     <form>
                         <Select
+                            id="zoneSelect"
                             placeholder={"Choisissez les zones"}
                             options={zones}
                             isMulti
@@ -142,8 +197,11 @@ const JeuFormZone : React.FC<Props> = ({jeu}) => {
                             value={selectedZones}
                             onChange={(values) => {setSelectedZones(values as Option[] | null)}}
                         />
-                        <Button onClick={(e) => onSubmit(e)}>Ajouter</Button>
-                        <p>{confirmationText}</p>
+                        <div id="buttons">
+                            <Button onClick={(e) => onSubmit(e)} variant="contained" size="small">Sauvegarder</Button>
+                            <Button onClick={()=>setJeuToAdd(undefined)}>Annuler</Button>
+                        </div>
+                        <p id="errMsg">{confirmationText}</p>
                     </form>
                 </>
             }

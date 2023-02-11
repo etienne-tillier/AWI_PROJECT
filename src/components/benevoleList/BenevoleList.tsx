@@ -27,6 +27,16 @@ const StyledBenevoleList = styled.div`
         margin-top: 1%;
         background-color: #3655b3;
         color: white;
+        max-height: 62vh;
+        overflow-x: hidden;
+        overflow-y: auto;
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .concreteList::-webkit-scrollbar {
+      display: none;
     }
   
     .removeCreneauButton{
@@ -46,6 +56,14 @@ const StyledBenevoleList = styled.div`
     }
     #removeCreneau>*{
       margin-right: 10px;
+    }
+  
+    #noBenevText{
+      text-align: center;
+      font-size: 1.2em;
+      align-items: center;
+      padding-top: 4px;
+      padding-bottom: 4px;
     }
 
 `
@@ -261,7 +279,8 @@ const BenevoleList = () => {
         return (
             <>
                 <div className="concreteList">
-                    {getBenevoleByCreneauInList().map((creneau : Creneau) => (
+                    {getBenevoleByCreneauInList().length !== 0 ?
+                        getBenevoleByCreneauInList().map((creneau : Creneau) => (
                         <BenevoleItem
                             benevole={creneau.benevole}
                             zone={creneau.zone}
@@ -273,7 +292,10 @@ const BenevoleList = () => {
                             selected={(creneau.benevole._id === benevoleToModif?._id ? true : false)}
                             creneau={creneauToRemove}
                         />
-                    ))}
+                    ))
+                        :
+                        <div id="noBenevText">Aucun bénevole affecté au créneau saisi</div>
+                    }
                 </div>
             </>
         )
