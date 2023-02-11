@@ -76,7 +76,7 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif, onDelT
             let options : Option[] = []
             for (let type of resp.data){
                 options.push({
-                    value: type._id,
+                    value: type,
                     label: type.nom
                 })
             }
@@ -125,7 +125,11 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif, onDelT
             }
         }).then((resp) => {
             if (resp.status === 200){
-                //TODO update array
+                onUpdateArray({
+                    _id : toModif!._id,
+                    nom : nomJeu,
+                    type : typeChoisi!.value
+                })
                 setConfirmationText("Le jeu a bien été modifié")
             }
             else {

@@ -80,7 +80,6 @@ const JeuList = () => {
 
     useEffect(() => { 
         if (filter.value === "nom" && isMount){
-            console.log(filter.value)
             setJeuList(sortByName(jeuList))
         }
      }, [filter])
@@ -88,8 +87,15 @@ const JeuList = () => {
     useEffect(()=>{
         if(jeuToAdd===undefined){
             getZones()
+            console.log("okkk")
         }
     }, [jeuToAdd])
+
+    useEffect(()=>{
+        if (isMount){
+            getZones()
+        }
+    }, [jeuList])
 
     /**
      * Fetching types

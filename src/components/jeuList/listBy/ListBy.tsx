@@ -72,6 +72,10 @@ const ListBy : React.FC<Props> = ({filterType, filterZone, jeux, selectedJeu, se
 
     const [selectedZone, setSelectedZone] = useState<Zone|undefined>(undefined)
 
+    useEffect(() => {
+            setJeuToAdd(undefined)
+      }, [selectedZone])
+
     const sortByType = ()=>{
         jeux.sort((a,b)=> {
             if (a.type.nom.toUpperCase() < b.type.nom.toUpperCase()) {
