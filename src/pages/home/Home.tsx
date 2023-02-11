@@ -32,40 +32,42 @@ const StyledHome = styled.div<StyledHomeProps>`
 
     .menu{
         width: 50%;
-        height: 10%;
-        border: solid 1px black;
+        height: 35px;
+        border: 1px solid lightgray;
+        border-radius: 5px;
         display: flex;
         flex-direction: row;
-        margin-bottom: 10px;
-
-        .benevoleButton{
-            background-color: ${props => props.isJeuProps ? "white" : "#884DFF"};
-            width: 100%;
-            text-align: center;
-            font-weight: bold;
-            transition: 0.2s;
-
-            :hover{
-                cursor: pointer;
-            }
-
-        }
-
+        align-items: center;
+        margin-right: 1%;
+      
         .jeuButton{
-            background-color: ${props => props.isJeuProps ? "#36b3b3" : "white"};
-            width: 100%;
-            text-align: center;
-            font-weight: bold;
-            transition: 0.2s;
-
-            :hover{
-                cursor: pointer;
-            }
+          background-color: ${props => props.isJeuProps ?  "#69B2DF":"white" };
+          color: ${props => props.isJeuProps ?  "#9A254C":"black"};
+        }
+        
+        .benevoleButton{
+          background-color: ${props => props.isJeuProps ?  "white":"#69B2DF" };
+          color: ${props => props.isJeuProps ?  "black":"#9A254C" };
+        }
+      
+        >*{
+          font-size: 1.5em;
+          width: 100%;
+          text-align: center;
+          font-weight: bold;
+          transition: 0.2s;
+          border-radius: 5px;
+          height: 100%;
+          
+          :hover{
+            cursor: pointer;
+            opacity: 0.8;
+          }
         }
     }
 
-    .title{
-        color: #4d4dff;
+    #globalLogo{
+      margin-left: 2px;
     }
   
   #header{
@@ -73,6 +75,9 @@ const StyledHome = styled.div<StyledHomeProps>`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    border-top: hidden;
   }
 
 `
@@ -96,8 +101,7 @@ const Home = () => {
     return (
         <StyledHome isJeuProps={isJeu}>
             <div id="header">
-                <img src={Logo} height="65
-                px"/>
+                <img id="globalLogo" src={Logo} height="65px"/>
                 <div className="menu">
                     <div className="benevoleButton" onClick={handleBenevoleButton}>Bénevoles</div>
                     <div className="jeuButton" onClick={handleJeuButton}>Jeux</div>

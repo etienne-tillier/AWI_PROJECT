@@ -33,6 +33,7 @@ const StyledJeuList = styled.div`
     background-color: white;
     border-radius: 3px;
     padding: 3px;
+    color: #4d4dff;
   }
   
   .zoneTitle{
@@ -66,14 +67,18 @@ interface Props{
     selectedJeu : Jeu|undefined
     setJeuToModif: (jeu: Jeu|undefined)=>void;
     setJeuToAdd: (jeu: Jeu|undefined)=>void;
+    setZones : () => void;
 }
 
-const ListBy : React.FC<Props> = ({filterType, filterZone, jeux, selectedJeu, setJeuToModif, setJeuToAdd}) => {
+const ListBy : React.FC<Props> = ({filterType, filterZone, jeux, selectedJeu, setJeuToModif, setJeuToAdd, setZones}) => {
 
     const [selectedZone, setSelectedZone] = useState<Zone|undefined>(undefined)
 
     useEffect(() => {
-            setJeuToAdd(undefined)
+        setJeuToAdd(undefined)
+        if(selectedZone===undefined && filterZone?.length!==0){
+            setZones();
+        }
       }, [selectedZone])
 
     const sortByType = ()=>{

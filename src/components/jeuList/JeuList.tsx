@@ -87,7 +87,6 @@ const JeuList = () => {
     useEffect(()=>{
         if(jeuToAdd===undefined){
             getZones()
-            console.log("okkk")
         }
     }, [jeuToAdd])
 
@@ -194,9 +193,9 @@ const JeuList = () => {
                         displayList()
                         :
                         filter.value==="type" ?
-                            <ListBy filterType={types} filterZone={null} jeux={jeuList} selectedJeu={jeuToModif} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd}/>
+                            <ListBy filterType={types} filterZone={null} jeux={jeuList} selectedJeu={jeuToModif} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd} setZones={getZones}/>
                             :
-                            <ListBy filterType={null} filterZone={zones} jeux={jeuList} selectedJeu={jeuToModif} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd}/>
+                            <ListBy filterType={null} filterZone={zones} jeux={jeuList} selectedJeu={jeuToModif} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd} setZones={getZones}/>
                     }
 
                     {jeuToAdd &&
