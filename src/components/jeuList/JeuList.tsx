@@ -118,10 +118,6 @@ const JeuList = () => {
         })
     }
 
-    const handleAddToArray = (newJeu: Jeu) => {
-        setJeuList([...jeuList, newJeu]);
-    };
-
     const sortByName = (liste : Jeu[]) => {
         let listeJeu : Jeu[] = []
         listeJeu = listeJeu.concat(liste)
@@ -132,6 +128,27 @@ const JeuList = () => {
         })
         return listeJeu
     }
+
+    const updateJeu = (jeux: Jeu[], updatedJeu: Jeu) => {
+        const newJeu = [...jeux];
+        const index = newJeu.findIndex(jeu => jeu._id === updatedJeu._id);
+        if (index !== -1) {
+            newJeu[index] = updatedJeu;
+        }
+        return newJeu;
+    };
+
+    const handleAddToArray = (newJeu: Jeu) => {
+        setJeuList([...jeuList, newJeu]);
+    };
+
+    const handleDelToArray = (jeuToRemove : Jeu) => {
+        setJeuList(jeuList.filter(jeu => jeu._id !== jeuToRemove._id));
+    }
+
+    const handleUpdateJeu= (updatedJeu: Jeu) => {
+        setJeuList(prevJeu => updateJeu(prevJeu, updatedJeu));
+      };
 
     const displayList = () => {
         return (
@@ -156,7 +173,7 @@ const JeuList = () => {
         <>
             {isMount &&
                 <StyledJeuList>
-                    <JeuForm onAddToArray={handleAddToArray} toModif={jeuToModif} setJeuToModif={setJeuToModif}></JeuForm>
+                    <JeuForm onAddToArray={handleAddToArray} toModif={jeuToModif} setJeuToModif={setJeuToModif} onDelToArray={handleDelToArray} onUpdateArray={handleUpdateJeu}></JeuForm>
                     <div id="selection">
                         <p>Trier par : </p>
                         <Select

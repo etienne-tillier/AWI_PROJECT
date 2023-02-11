@@ -39,9 +39,11 @@ interface Props {
     onAddToArray: (newArrayValue: Jeu) => void;
     toModif: Jeu|undefined;
     setJeuToModif: (jeu: Jeu|undefined)=>void;
+    onDelToArray: (jeuToDel : Jeu) => void;
+    onUpdateArray: (updatedJeu : Jeu) => void;
 }
 
-const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif}) => {
+const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif, onDelToArray, onUpdateArray}) => {
 
     const [isMount, setIsMount] = useState(false)
     const [typesJeu, setTypesJeu] = useState([])
@@ -147,6 +149,17 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif}) => {
         setTypeChoisi(newValue as Option | null);
     };
 
+    const handleDelJeu = () => {
+        axios.delete(process.env.REACT_APP_API_URL + "jeux/" + toModif!._id).then((resp) => {
+            if(resp.status === 200){
+                onDelToArray(toModif!)
+                setJeuToModif(undefined);
+                setTypeChoisi(null)
+                setConfirmationText("Le jeu a bien été supprimé ! ")
+            }
+        })
+    }
+
 
     return (
         <StyledJeuForm>
@@ -182,6 +195,16 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif}) => {
                     </Button>
                 }
             </form>
+                { toModif &&
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        color="error"
+                        onClick={() => {handleDelJeu()}}
+                        >
+                        Supprimer le jeu
+                    </Button>
+                }
             <p>{confirmationText}</p>
         </StyledJeuForm>
     );
