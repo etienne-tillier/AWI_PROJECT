@@ -102,7 +102,7 @@ const JeuFormZone : React.FC<Props> = ({jeu, setJeuToAdd}) => {
         for (let zoneSelect of selectedZones!){
             let check : boolean = true
             for (let zoneJeu of jeuZones){
-                if (zoneSelect.value._id == zoneJeu._id){
+                if (zoneSelect.value._id === zoneJeu._id){
                     check = false
                 }
             }
@@ -121,7 +121,7 @@ const JeuFormZone : React.FC<Props> = ({jeu, setJeuToAdd}) => {
         for (let zoneJeu of jeuZones!){
             let check : boolean = true
             for (let zoneSelect of selectedZones!){
-                if (zoneSelect.value._id == zoneJeu._id){
+                if (zoneSelect.value._id === zoneJeu._id){
                     check = false
                 }
             }

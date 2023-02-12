@@ -87,7 +87,6 @@ const JeuList = () => {
     useEffect(()=>{
         if(jeuToAdd===undefined){
             getZones()
-            console.log("okkk")
         }
     }, [jeuToAdd])
 
