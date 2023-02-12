@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import DatePicker from 'react-datepicker'
-import { NumericStepper } from '@anatoliygatt/numeric-stepper';
 import Select from 'react-select'
 
 import 'react-datepicker/dist/react-datepicker.css'
