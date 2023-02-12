@@ -186,8 +186,8 @@ const ZoneFormJeu : React.FC<Props> = ({jeux, selectedZone, setSelectedZone}) =>
                     Sauvegarder
                 </Button>
                 <Button onClick={()=>setSelectedZone(undefined)}>Annuler</Button>
-                <p>{confirmationText}</p>
             </div>
+            <p>{confirmationText}</p>
         </StyledForm>
     )
 }

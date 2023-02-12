@@ -108,10 +108,12 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif, onDelT
                 if (resp.status === 200){
                     onAddToArray(resp.data)
                     setConfirmationText("Le jeu a bien été crée")
+                    setJeuToModif(undefined)
+                    setTypeChoisi(null)
+                    setNomJeu("")
                 }
-                else {
-                    setConfirmationText("Il y a eu une erreur lors de la création du jeu")
-                }
+            }).catch((err)=>{
+                setConfirmationText("Erreur lors de la création du jeu" + err.message)
             })
     }
 
@@ -131,10 +133,11 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif, onDelT
                     type : typeChoisi!.value
                 })
                 setConfirmationText("Le jeu a bien été modifié")
+                setJeuToModif(undefined)
+                setTypeChoisi(null)
             }
-            else {
-                setConfirmationText("Il y a eu une erreur lors de la modification du jeu")
-            }
+        }).catch((err)=>{
+            setConfirmationText("Erreur lors de la modification du jeu" + err.message)
         })
     }
 
