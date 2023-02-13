@@ -15,6 +15,10 @@ const StyledForm = styled.div`
     margin-top: 1%;
     margin-left: 1%;
     border: solid 1px lightgray;
+
+    @media screen and (max-width: 650px) {
+      width: 98%;
+    }
   
     >*{
       margin-bottom: 1%;

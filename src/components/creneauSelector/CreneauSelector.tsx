@@ -16,6 +16,10 @@ const StyledSelector = styled.div`
       flex-direction: row;
       align-items: center;
       justify-content: center;
+
+      @media screen and (max-width: 600px) {
+        width: 98%;
+      }
     }
 
   #creneauSelector>*{

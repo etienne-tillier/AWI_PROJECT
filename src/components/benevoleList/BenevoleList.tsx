@@ -27,7 +27,7 @@ const StyledBenevoleList = styled.div`
         margin-top: 1%;
         background-color: #3655b3;
         color: white;
-        max-height: 62vh;
+        max-height: 44vh;
         overflow-x: hidden;
         overflow-y: auto;
         -ms-overflow-style: none;  /* IE and Edge */
@@ -48,6 +48,10 @@ const StyledBenevoleList = styled.div`
   
     #zoneSelect{
       width: 350px;
+
+      @media screen and (max-width: 350px) {
+        width: 98%;
+      }
     }
   
     #removeCreneau{

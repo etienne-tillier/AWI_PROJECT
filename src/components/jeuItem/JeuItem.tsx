@@ -17,6 +17,10 @@ const StyledJeuItem = styled.div<StyledProps>`
         width: 100%;
         height: 50px;
         margin-left: 4%;
+
+        @media screen and (max-width: 450px) {
+          grid-template-columns: 85% 15%;
+        }
   
         .jeuInfo{
           display: grid;
@@ -30,6 +34,10 @@ const StyledJeuItem = styled.div<StyledProps>`
           border-radius: 3px;
           background-color: ${props => props.selected ? "#bfcfff" : "#3655b3"};
           color: ${props => props.selected ? "#884DFF" : "white"};
+
+          @media screen and (max-width: 450px) {
+            grid-template-columns: 48% 48%;
+          }
         }
   
         .jeuInfo:hover{

@@ -14,10 +14,10 @@ interface StyledHomeProps {
 const StyledHome = styled.div<StyledHomeProps>`
   
     height: 100%;
-    width: 60%;
+    width: 64%;
     margin-top: 2px;
-    margin-left: 20%;
-    margin-right: 20%;
+    margin-left: 22%;
+    margin-right: 22%;
 
     @media screen and (max-width: 1200px) {
       width: 90%;
@@ -39,6 +39,13 @@ const StyledHome = styled.div<StyledHomeProps>`
         flex-direction: row;
         align-items: center;
         margin-right: 1%;
+
+      @media screen and (max-width: 500px) {
+        width: 65%;
+      }
+      @media screen and (max-width: 350px) {
+        width: 70%;
+      }
       
         .jeuButton{
           background-color: ${props => props.isJeuProps ?  "#69B2DF":"white" };

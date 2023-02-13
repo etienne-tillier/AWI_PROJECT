@@ -22,6 +22,10 @@ const StyledBenevoleItem = styled.div<StyledProps>`
         align-items: center;
         justify-content: space-between;
         height: 70px;
+
+        @media screen and (max-width: 400px) {
+          height: 100px;
+        }
   
         .benevInfo:hover, .creneau:hover{
           cursor: pointer;
@@ -56,6 +60,10 @@ const StyledBenevoleItem = styled.div<StyledProps>`
           align-items: center;
           justify-content: left;
           gap: 2%;
+
+          @media screen and (max-width: 400px) {
+            height: 45px;
+          }
         }
 
         .addCrenButton{

@@ -23,6 +23,10 @@ const StyledForm = styled.div<StyledProps>`
     margin-top: 1%;
     margin-left: 1%;
     border: solid 1px lightgray;
+
+    @media screen and (max-width: 600px) {
+      width: 98%;
+    }
   
     #infoText{
       font-size: 14px;
@@ -38,6 +42,10 @@ const StyledForm = styled.div<StyledProps>`
     #zoneSelection{
       margin-top: 1%;
       width: 500px;
+
+      @media screen and (max-width: 600px) {
+        width: 95%;
+      }
     }
   
     #submitButt{

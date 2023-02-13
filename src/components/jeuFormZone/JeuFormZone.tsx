@@ -15,6 +15,10 @@ const StyledJeuFormZone = styled.div`
     margin-top: 1%;
     margin-left: 1%;
     border: solid 1px lightgray;
+
+    @media screen and (max-width: 650px) {
+      width: 96%;
+    }
   
 
     #infoText{
@@ -39,6 +43,10 @@ const StyledJeuFormZone = styled.div`
     
     #zoneSelect{
       width: 600px;
+      
+      @media screen and (max-width: 650px) {
+        width: 98%;
+      }
     }
   
     #errMsg{

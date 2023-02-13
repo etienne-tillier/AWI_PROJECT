@@ -14,7 +14,7 @@ const StyledJeuList = styled.div`
     margin-top: 1%;
     background-color: #3655b3;
     color: white;
-    max-height: 62vh;
+    max-height: 53vh;
     overflow-x: hidden;
     overflow-y: auto;
     -ms-overflow-style: none;  /* IE and Edge */
@@ -40,7 +40,14 @@ const StyledJeuList = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width:25%;
+    width:28%;
+
+
+    @media screen and (max-width: 1000px) {
+      width: auto;
+      justify-content: flex-start;
+      gap: 15px;
+    }
   }
   
   .zoneTitle, .titleJeu{
