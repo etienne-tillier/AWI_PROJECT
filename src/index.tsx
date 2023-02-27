@@ -10,6 +10,7 @@ import '@fontsource/roboto/700.css';
 import Login from "./pages/authentification/Login";
 import Register from "./pages/authentification/Register";
 import Reset from "./pages/authentification/Reset";
+import Error404 from "./pages/other/404";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -22,6 +23,7 @@ root.render(
         <Route path='/' element={<Login/>}/>
         <Route path='/register' element={<Register/>}/>
         <Route path='/reset' element={<Reset/>}/>
+        <Route path="*" element={<Error404/>}/>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
