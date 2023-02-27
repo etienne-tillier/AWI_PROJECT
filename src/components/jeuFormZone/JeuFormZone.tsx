@@ -61,12 +61,13 @@ interface Option {
 }
 
 interface Props {
+    token: String
     jeu : Jeu,
     setJeuToAdd : (jeu : Jeu|undefined) => void
 
 }
 
-const JeuFormZone : React.FC<Props> = ({jeu, setJeuToAdd}) => {
+const JeuFormZone : React.FC<Props> = ({token,jeu, setJeuToAdd}) => {
 
 
     const [zones, setZones] = useState<Option[]>([])
@@ -79,7 +80,7 @@ const JeuFormZone : React.FC<Props> = ({jeu, setJeuToAdd}) => {
         let zonesOption : Option[] = []
         let zonesOptionSelected : Option [] = []
         let zonesJeu : Zone[] = []
-        axios.get(process.env.REACT_APP_API_URL + "zones").then((resp) => {
+        axios.get(process.env.REACT_APP_API_URL + "zones", {headers:{Authorization: 'Bearer ' + token}}).then((resp) => {
             for (let zone of resp.data){
                 zonesOption.push({
                     value: zone,
@@ -163,7 +164,7 @@ const JeuFormZone : React.FC<Props> = ({jeu, setJeuToAdd}) => {
                 await axios.patch(process.env.REACT_APP_API_URL + "zones/addJeuTo/" + zone._id,
                     {
                         jeu: jeu._id
-                    }
+                    }, {headers:{Authorization: 'Bearer ' + token}}
                 )
             }catch (err){
                 setConfirmationText(err as string)
@@ -181,7 +182,7 @@ const JeuFormZone : React.FC<Props> = ({jeu, setJeuToAdd}) => {
                 await axios.patch(process.env.REACT_APP_API_URL + "zones/removeJeuFrom/" + zone._id,
                     {
                         id: jeu._id
-                    }
+                    }, {headers:{Authorization: 'Bearer ' + token}}
                 )
             }catch (err){
                 setConfirmationText(err as string)

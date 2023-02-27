@@ -36,6 +36,7 @@ interface Option {
   }
 
 interface Props {
+    token: String;
     onAddToArray: (newArrayValue: Jeu) => void;
     toModif: Jeu|undefined;
     setJeuToModif: (jeu: Jeu|undefined)=>void;
@@ -43,7 +44,7 @@ interface Props {
     onUpdateArray: (updatedJeu : Jeu) => void;
 }
 
-const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif, onDelToArray, onUpdateArray}) => {
+const JeuForm : React.FC<Props> = ({token, onAddToArray, toModif, setJeuToModif, onDelToArray, onUpdateArray}) => {
 
     const [isMount, setIsMount] = useState(false)
     const [typesJeu, setTypesJeu] = useState([])
@@ -71,7 +72,7 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif, onDelT
     }, [toModif])
 
     useEffect(() => {
-        axios.get(process.env.REACT_APP_API_URL + "typeJeux").then((resp) => {
+        axios.get(process.env.REACT_APP_API_URL + "typeJeux", {headers:{Authorization: 'Bearer ' + token}}).then((resp) => {
             setTypesJeu(resp.data)
             let options : Option[] = []
             for (let type of resp.data){
@@ -104,7 +105,7 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif, onDelT
                     _id : typeChoisi?.value,
                     nom : typeChoisi?.label
                 }
-            }).then((resp) => {
+            }, {headers:{Authorization: 'Bearer ' + token}}).then((resp) => {
                 if (resp.status === 200){
                     onAddToArray(resp.data)
                     setConfirmationText("Le jeu a bien été crée")
@@ -125,7 +126,7 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif, onDelT
                 _id : typeChoisi?.value,
                 nom : typeChoisi?.label
             }
-        }).then((resp) => {
+        }, {headers:{Authorization: 'Bearer ' + token}}).then((resp) => {
             if (resp.status === 200){
                 onUpdateArray({
                     _id : toModif!._id,
@@ -143,11 +144,12 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif, onDelT
 
     const onSubmit = (e : any) => {
         e.preventDefault()
-        if (toModif){
-            modifyJeu()
-        }
-        else {
-            createJeu()
+        if(nomJeu.length>0 && typeChoisi!==null) {
+            if (toModif) {
+                modifyJeu()
+            } else {
+                createJeu()
+            }
         }
     }
 
@@ -157,7 +159,7 @@ const JeuForm : React.FC<Props> = ({onAddToArray, toModif, setJeuToModif, onDelT
     };
 
     const handleDelJeu = () => {
-        axios.delete(process.env.REACT_APP_API_URL + "jeux/" + toModif!._id).then((resp) => {
+        axios.delete(process.env.REACT_APP_API_URL + "jeux/" + toModif!._id, {headers:{Authorization: 'Bearer ' + token}}).then((resp) => {
             if(resp.status === 200){
                 onDelToArray(toModif!)
                 setJeuToModif(undefined);

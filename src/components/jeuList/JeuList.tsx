@@ -51,7 +51,11 @@ interface Filter{
     value: String
 }
 
-const JeuList = () => {
+interface Props{
+    token: String
+}
+
+const JeuList : React.FC<Props> = ({token}) => {
 
     const possibleFilters : Filter[] = [{label: "Nom", value:"nom"}, {label: "Type", value:"type"}, {label: "Zone", value:"zone"}]
 
@@ -69,14 +73,15 @@ const JeuList = () => {
             fillTypes()
         }
             let listeJeu : Jeu[] = []
-            axios.get(process.env.REACT_APP_API_URL + "jeux").then((resp) => {
+            axios.get(process.env.REACT_APP_API_URL + "jeux", {headers:{Authorization: 'Bearer ' + token}}
+            ).then((resp) => {
                 for (let jeu of resp.data){
                     listeJeu.push(jeu)
                 }
                 setJeuList(sortByName(listeJeu))
                 setIsMount(true)
             })
-    }, [])
+    }, [token])
 
     useEffect(() => { 
         if (filter.value === "nom" && isMount){
@@ -88,7 +93,7 @@ const JeuList = () => {
         if(jeuToAdd===undefined){
             getZones()
         }
-    }, [jeuToAdd])
+    }, [jeuToAdd, token])
 
     useEffect(()=>{
         if (isMount){
@@ -100,7 +105,7 @@ const JeuList = () => {
      * Fetching types
      */
     const fillTypes = ()=>{
-        axios.get(process.env.REACT_APP_API_URL + "typeJeux").then((resp) => {
+        axios.get(process.env.REACT_APP_API_URL + "typeJeux", {headers:{Authorization: 'Bearer ' + token}}).then((resp) => {
             let aux: TypeJeu[] = []
             for (let type of resp.data) {
                 aux.push(type)
@@ -113,7 +118,7 @@ const JeuList = () => {
      * Fetching every zones
      */
     const getZones = () => {
-        axios.get(process.env.REACT_APP_API_URL + "zones").then((resp)=>{
+        axios.get(process.env.REACT_APP_API_URL + "zones", {headers:{Authorization: 'Bearer ' + token}}).then((resp)=>{
             let aux : Zone[] = [];
             setZones([])
             for(let zone of resp.data){
@@ -178,7 +183,7 @@ const JeuList = () => {
         <>
             {isMount &&
                 <StyledJeuList>
-                    <JeuForm onAddToArray={handleAddToArray} toModif={jeuToModif} setJeuToModif={setJeuToModif} onDelToArray={handleDelToArray} onUpdateArray={handleUpdateJeu}></JeuForm>
+                    <JeuForm token={token} onAddToArray={handleAddToArray} toModif={jeuToModif} setJeuToModif={setJeuToModif} onDelToArray={handleDelToArray} onUpdateArray={handleUpdateJeu}></JeuForm>
                     <div id="selection">
                         <p>Trier par : </p>
                         <Select
@@ -193,13 +198,14 @@ const JeuList = () => {
                         displayList()
                         :
                         filter.value==="type" ?
-                            <ListBy filterType={types} filterZone={null} jeux={jeuList} selectedJeu={jeuToModif} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd} setZones={getZones}/>
+                            <ListBy token={token} filterType={types} filterZone={null} jeux={jeuList} selectedJeu={jeuToModif} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd} setZones={getZones}/>
                             :
-                            <ListBy filterType={null} filterZone={zones} jeux={jeuList} selectedJeu={jeuToModif} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd} setZones={getZones}/>
+                            <ListBy token={token} filterType={null} filterZone={zones} jeux={jeuList} selectedJeu={jeuToModif} setJeuToModif={setJeuToModif} setJeuToAdd={setJeuToAdd} setZones={getZones}/>
                     }
 
                     {jeuToAdd &&
                         <JeuFormZone
+                            token={token}
                             jeu={jeuToAdd}
                             setJeuToAdd={setJeuToAdd}
                         />

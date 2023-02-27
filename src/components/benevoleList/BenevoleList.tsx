@@ -77,9 +77,11 @@ interface Option {
     label: String;
 }
 
+interface Props{
+    token : String
+}
 
-
-const BenevoleList = () => {
+const BenevoleList : React.FC<Props> = ({token}) => {
 
     const [zones, setZones] = useState<Zone[]|null>(null)
     const [benevoles, setBenevoles] = useState<Benevole[]>([])
@@ -97,18 +99,20 @@ const BenevoleList = () => {
 
     useEffect(() => {
         //Fetch benevoles from the api
-        axios.get(process.env.REACT_APP_API_URL + "benevoles").then((resp) => {
+        axios.get(process.env.REACT_APP_API_URL + "benevoles", {
+            headers:{Authorization: 'Bearer ' + token}
+        }).then((resp) => {
             setBenevoles(resp.data)
                 fetchZones()
                 setIsMount(true)
         })
-      }, []);
+      }, [token]);
 
       useEffect(() => {
         if (isMount){
             fetchZones()
         }
-        }, [benevoles])
+        }, [benevoles, token])
 
         useEffect(() => {
             for (let zone of optionsSelectZones){
@@ -133,7 +137,7 @@ const BenevoleList = () => {
                     label: "Tous les Bénévoles"
                 }
             )
-            axios.get(process.env.REACT_APP_API_URL + "zones").then((resp) => {
+            axios.get(process.env.REACT_APP_API_URL + "zones", {headers:{Authorization: 'Bearer ' + token}}).then((resp) => {
                 setZones(resp.data)
                 for (let zone of resp.data) {
                     options.push({
@@ -175,7 +179,7 @@ const BenevoleList = () => {
         axios.patch(process.env.REACT_APP_API_URL + "zones/removeBenevFrom/"+creneauToRemove!.zone._id,{
             id: creneauToRemove!.benevole._id,
             heureDebut: creneauToRemove!.debut
-        }).then(()=>{
+        }, {headers:{Authorization: 'Bearer ' + token}}).then(()=>{
             removeCreneauList(creneauToRemove!)
             setCreneauToRemove(undefined);
         })
@@ -311,7 +315,7 @@ const BenevoleList = () => {
             {isMount &&
                 <StyledBenevoleList>
                     <>
-                        <BenevoleForm onAddToArray={handleAddToArray} benevole={benevoleToModif}
+                        <BenevoleForm token={token} onAddToArray={handleAddToArray} benevole={benevoleToModif}
                             setBenevoleToModif={setBenevoleToModif} onUpdateToArray={handleUpdateBenevole}
                             onDelToArray={handleDelToArray}/>
                         <Toggle toggled={toggled} onClick={setToggled}/>
@@ -336,7 +340,7 @@ const BenevoleList = () => {
                     </>
                     {
                         benevoleToLink!==undefined &&
-                        <BenevoleToZoneForm benevole={benevoleToLink} zones={zones!}
+                        <BenevoleToZoneForm token={token} benevole={benevoleToLink} zones={zones!}
                                             setBenevoleToLink={setBenevoleToLink} addCreneauList={addCreneauList}/>
                     }
                     {

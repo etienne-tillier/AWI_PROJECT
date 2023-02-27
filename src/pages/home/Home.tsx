@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import BenevoleList from '../../components/benevoleList/BenevoleList';
 import JeuList from '../../components/jeuList/JeuList';
 
 import Logo from "../../images/logo.png"
+import DiscoLogo from "../../images/disconnect.png"
+import {auth, logout} from "../../config/firebase-config";
 
 
 
@@ -77,6 +81,13 @@ const StyledHome = styled.div<StyledHomeProps>`
       margin-left: 2px;
     }
   
+    #disconnectButton{
+      margin-right: 5px;
+      :hover{
+        cursor: pointer;
+      }
+    }
+  
   #header{
     display: flex;
     flex-direction: row;
@@ -94,7 +105,19 @@ const StyledHome = styled.div<StyledHomeProps>`
 const Home = () => {
 
     const [isJeu, setIsJeu] = useState<boolean>(false)
+    const [user, loading, error] = useAuthState(auth);
+    const navigate = useNavigate();
+    const [token, setToken] = useState("")
 
+    useEffect(() => {
+        if (loading) return;
+        if (!user) return navigate("/");
+        else{
+            user.getIdToken().then((token)=>{
+                setToken(token)
+            })
+        }
+    }, [user, loading]);
 
     const handleBenevoleButton = () => {
         setIsJeu(false)
@@ -113,12 +136,13 @@ const Home = () => {
                     <div className="benevoleButton" onClick={handleBenevoleButton}>Bénevoles</div>
                     <div className="jeuButton" onClick={handleJeuButton}>Jeux</div>
                 </div>
+                <img id="disconnectButton" src={DiscoLogo} height="25px" onClick={logout}/>
             </div>
             <div className="list">
                 {isJeu ? 
-                    <JeuList></JeuList>
+                    <JeuList token={token}></JeuList>
                     :
-                    <BenevoleList></BenevoleList>
+                    <BenevoleList token={token}></BenevoleList>
                 }
             </div>
         </StyledHome>

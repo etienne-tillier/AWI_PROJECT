@@ -74,13 +74,14 @@ interface Option {
 }
 
 interface Props{
+    token : String
     benevole : Benevole
     zones : Zone[]
     setBenevoleToLink: (benevole : Benevole | undefined) =>void;
     addCreneauList: (newCreneau : Creneau) =>void;
 }
 
-const BenevoleToZoneForm : React.FC<Props> = ({benevole, zones, setBenevoleToLink, addCreneauList}) => {
+const BenevoleToZoneForm : React.FC<Props> = ({token,benevole, zones, setBenevoleToLink, addCreneauList}) => {
 
     const [confirmationText, setConfirmationText] = useState("")
     const [zone, setZone] = useState<Option | null>(null);
@@ -109,7 +110,7 @@ const BenevoleToZoneForm : React.FC<Props> = ({benevole, zones, setBenevoleToLin
                 heureDebut: new Date(selectedCreneau.debut).toJSON(),
                 heureFin: new Date(selectedCreneau.fin).toJSON(),
                 benevole: benevole._id
-            }).then((resp) => {
+            }, {headers:{Authorization: 'Bearer ' + token}}).then((resp) => {
                 if (resp.status === 200) {
                     addCreneauList({
                         benevole: benevole,

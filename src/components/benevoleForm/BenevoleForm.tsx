@@ -24,6 +24,7 @@ const StyledBenevoleForm = styled.div`
 `
 
 interface Props {
+    token: String;
     onAddToArray: (newArrayValue: Benevole) => void;
     onUpdateToArray: (newArrayValue: Benevole) => void;
     benevole : Benevole | undefined;
@@ -31,7 +32,7 @@ interface Props {
     onDelToArray : (benevole : Benevole) => void;
   }
 
-const BenevoleForm : React.FC<Props> = ({onAddToArray, benevole, setBenevoleToModif, onUpdateToArray, onDelToArray}) => {
+const BenevoleForm : React.FC<Props> = ({token,onAddToArray, benevole, setBenevoleToModif, onUpdateToArray, onDelToArray}) => {
 
     const [confirmationText, setConfirmationText] = useState("")
     const [nomBenevole, setNomBenevole] = useState<string>("")
@@ -78,7 +79,7 @@ const BenevoleForm : React.FC<Props> = ({onAddToArray, benevole, setBenevoleToMo
             nom: document.getElementsByTagName("input")[0].value,
             prenom: document.getElementsByTagName("input")[1].value,
             email: document.getElementsByTagName("input")[2].value
-          }).then((resp) => {
+          }, {headers:{Authorization: 'Bearer ' + token}}).then((resp) => {
             if (resp.status === 200) {
                 onAddToArray(resp.data)
                 setConfirmationText("Bénévole créé avec succès")
@@ -96,7 +97,7 @@ const BenevoleForm : React.FC<Props> = ({onAddToArray, benevole, setBenevoleToMo
             nom: nomBenevole,
             prenom: prenomBenevole,
             email: emailBenevole
-        }).then((resp) => {
+        }, {headers:{Authorization: 'Bearer ' + token}}).then((resp) => {
             if (resp.status === 200) {
                 onUpdateToArray({
                     _id : benevole!._id,
@@ -116,7 +117,8 @@ const BenevoleForm : React.FC<Props> = ({onAddToArray, benevole, setBenevoleToMo
 
     const handleDelBenevole = () => {
 
-        axios.delete(process.env.REACT_APP_API_URL + "benevoles/" + benevole?._id).then((resp) => {
+        axios.delete(process.env.REACT_APP_API_URL + "benevoles/" + benevole?._id, {headers:{Authorization: 'Bearer ' + token}}
+        ).then((resp) => {
             if(resp.status === 200){
                 onDelToArray(benevole!)
                 setConfirmationText("Le bénévole a bien été supprimé ! ")

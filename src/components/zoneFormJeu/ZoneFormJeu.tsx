@@ -5,7 +5,6 @@ import Jeu from "../../interfaces/jeu";
 import Select from "react-select";
 import Zone from "../../interfaces/zone";
 import axios from 'axios';
-import { OptionsType } from 'react-select/lib/types';
 
 const StyledForm = styled.div`
 
@@ -42,6 +41,7 @@ const StyledForm = styled.div`
 `
 
 interface Props{
+    token: String
     jeux : Jeu[];
     selectedZone : Zone|undefined;
     setSelectedZone : (zone: Zone|undefined) => void;
@@ -52,7 +52,7 @@ interface Options{
     label : String
 }
 
-const ZoneFormJeu : React.FC<Props> = ({jeux, selectedZone, setSelectedZone}) =>{
+const ZoneFormJeu : React.FC<Props> = ({token,jeux, selectedZone, setSelectedZone}) =>{
 
     const [jeuxOptions, setJeuxOptions] = useState<Options[]>([])
     const [jeuxZone, setJeuxZone] = useState<Jeu[] | undefined>([])
@@ -144,7 +144,7 @@ const ZoneFormJeu : React.FC<Props> = ({jeux, selectedZone, setSelectedZone}) =>
                     await axios.patch(process.env.REACT_APP_API_URL + "zones/addJeuTo/" + selectedZone!._id,
                         {
                             jeu: jeu._id
-                        }
+                        }, {headers:{Authorization: 'Bearer ' + token}}
                     )
                 }catch (err){
                     setConfirmationText(err as string)
@@ -162,7 +162,7 @@ const ZoneFormJeu : React.FC<Props> = ({jeux, selectedZone, setSelectedZone}) =>
                     await axios.patch(process.env.REACT_APP_API_URL + "zones/removeJeuFrom/" + selectedZone!._id,
                         {
                             id: jeu._id
-                        }
+                        }, {headers:{Authorization: 'Bearer ' + token}}
                     )
                 }catch (err){
                     setConfirmationText(err as string)

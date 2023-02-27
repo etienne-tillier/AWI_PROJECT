@@ -67,7 +67,7 @@ const StyledJeuList = styled.div`
 `
 
 interface Props{
-
+    token: String
     filterType : TypeJeu[] | null
     filterZone : Zone[] | null
     jeux : Jeu[]
@@ -77,7 +77,7 @@ interface Props{
     setZones : () => void;
 }
 
-const ListBy : React.FC<Props> = ({filterType, filterZone, jeux, selectedJeu, setJeuToModif, setJeuToAdd, setZones}) => {
+const ListBy : React.FC<Props> = ({token, filterType, filterZone, jeux, selectedJeu, setJeuToModif, setJeuToAdd, setZones}) => {
 
     const [selectedZone, setSelectedZone] = useState<Zone|undefined>(undefined)
 
@@ -149,7 +149,7 @@ const ListBy : React.FC<Props> = ({filterType, filterZone, jeux, selectedJeu, se
         <StyledJeuList>
             {displayFilteredJeu()}
             {selectedZone &&
-                <ZoneFormJeu jeux={jeux} selectedZone={selectedZone} setSelectedZone={setSelectedZone}/>
+                <ZoneFormJeu token={token} jeux={jeux} selectedZone={selectedZone} setSelectedZone={setSelectedZone}/>
             }
         </StyledJeuList>
     )
