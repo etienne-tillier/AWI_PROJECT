@@ -12,6 +12,7 @@ import Select, {SingleValue} from 'react-select'
 import Toggle from "./toggleButton/ToggleButton";
 import CreneauSelector from "../creneauSelector/CreneauSelector"
 import {Button} from "@mui/material";
+import Loader from "../loader/loader";
 
 
 const StyledBenevoleList = styled.div`
@@ -312,7 +313,7 @@ const BenevoleList : React.FC<Props> = ({token}) => {
 
     return (
         <>
-            {isMount &&
+            {isMount ?
                 <StyledBenevoleList>
                     <>
                         <BenevoleForm token={token} onAddToArray={handleAddToArray} benevole={benevoleToModif}
@@ -361,6 +362,8 @@ const BenevoleList : React.FC<Props> = ({token}) => {
                         </div>
                     }
                 </StyledBenevoleList>
+                :
+                <Loader></Loader>
             }
         </>
     );

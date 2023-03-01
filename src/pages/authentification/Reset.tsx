@@ -4,11 +4,18 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { auth, sendPasswordReset } from "../../config/firebase-config";
 import styled from 'styled-components';
+import Logo from "../../images/logo.png"
 
 const StyledReset = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  
   .reset {
-    height: 100vh;
-    width: 100vw;
+    margin-bottom: 10%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -19,11 +26,13 @@ const StyledReset = styled.div`
     text-align: center;
     background-color: #dcdcdc;
     padding: 30px;
+    border-radius: 5px;
   }
   .reset__textBox {
     padding: 10px;
     font-size: 18px;
     margin-bottom: 10px;
+    border-radius: 3px;
   }
   .reset__btn {
     padding: 10px;
@@ -32,6 +41,7 @@ const StyledReset = styled.div`
     border: none;
     color: white;
     background-color: black;
+    border-radius: 3px;
   }
   .reset div {
     margin-top: 7px;
@@ -48,6 +58,7 @@ const Reset = () =>{
     }, [user, loading]);
     return (
         <StyledReset>
+            <img id="globalLogo" src={Logo} height="150px"/>
             <div className="reset">
                 <div className="reset__container">
                     <input

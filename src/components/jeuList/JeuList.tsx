@@ -9,6 +9,7 @@ import Select from "react-select";
 import ListBy from "./listBy/ListBy";
 import TypeJeu from "../../interfaces/typeJeu";
 import Zone from "../../interfaces/zone";
+import Loader from "../loader/loader";
 
 const StyledJeuList = styled.div`
 
@@ -181,7 +182,7 @@ const JeuList : React.FC<Props> = ({token}) => {
 
     return (
         <>
-            {isMount &&
+            {isMount ?
                 <StyledJeuList>
                     <JeuForm token={token} onAddToArray={handleAddToArray} toModif={jeuToModif} setJeuToModif={setJeuToModif} onDelToArray={handleDelToArray} onUpdateArray={handleUpdateJeu}></JeuForm>
                     <div id="selection">
@@ -211,6 +212,8 @@ const JeuList : React.FC<Props> = ({token}) => {
                         />
                     }
                 </StyledJeuList>
+                :
+                <Loader></Loader>
             }
         </>
     );

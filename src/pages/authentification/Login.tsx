@@ -3,11 +3,20 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import styled from 'styled-components';
 import { auth, logInWithEmailAndPassword, signInWithGoogle } from "../../config/firebase-config";
+import Logo from "../../images/logo.png"
+import Loader from "../../components/loader/loader";
+
 
 const StyledLogin = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  
   .login {
-    height: 100vh;
-    width: 100vw;
+    margin-bottom: 10%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -18,11 +27,13 @@ const StyledLogin = styled.div`
     text-align: center;
     background-color: #dcdcdc;
     padding: 30px;
+    border-radius: 5px;
   }
   .login__textBox {
     padding: 10px;
     font-size: 18px;
     margin-bottom: 10px;
+    border-radius: 3px;
   }
   .login__btn {
     padding: 10px;
@@ -31,9 +42,19 @@ const StyledLogin = styled.div`
     border: none;
     color: white;
     background-color: black;
+    border-radius: 3px;
+    :hover{
+      cursor: pointer;
+      opacity: 0.9;
+    }
   }
   .login__google {
     background-color: #4285f4;
+    border-radius: 3px;
+    :hover{
+      cursor: pointer;
+      opacity: 0.9;
+    }
   }
   .login div {
     margin-top: 7px;
@@ -54,6 +75,7 @@ const Login = () => {
     }, [user, loading]);
     return (
         <StyledLogin>
+            <img id="globalLogo" src={Logo} height="150px"/>
             <div className="login">
                 <div className="login__container">
                     <input
